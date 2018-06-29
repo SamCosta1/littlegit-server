@@ -11,7 +11,13 @@ import javax.ws.rs.core.MediaType
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Singleton
-class UserController @Inject constructor(private val userService: UserService) {
+class UserController() {
+
+    @Inject constructor(userService: UserService) : this() {
+        this.userService = userService
+    }
+
+    private lateinit var userService: UserService
 
     @GET
     @Path("/{id}")
