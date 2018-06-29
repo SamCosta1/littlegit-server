@@ -1,4 +1,4 @@
-package org.littlegit.server.application
+package com.littlegit.server.application
 
 import java.io.IOException
 import javax.ws.rs.container.ContainerRequestContext

@@ -25,6 +25,11 @@
             <version>1.5.4</version>
         </dependency>
         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.11</version>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
@@ -53,14 +58,13 @@
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
-            <scope>compile</scope>
             <version>2.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger-compiler</artifactId>
             <version>2.0.2</version>
-            <scope>compile</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -80,7 +84,7 @@
 
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
+            <artifactId>jersey-container-servlet</artifactId>
             <version>2.22.1</version>
         </dependency>
         <dependency>
@@ -122,7 +126,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.3</version>
                 <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <failOnMissingWebXml>true</failOnMissingWebXml>
                 </configuration>
             </plugin>
             <plugin>
@@ -200,14 +204,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.google.dagger</groupId>
-                        <artifactId>dagger-compiler</artifactId>
-                        <version>2.0</version>
-                        <optional>true</optional>
-                    </dependency>
-                </dependencies>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>

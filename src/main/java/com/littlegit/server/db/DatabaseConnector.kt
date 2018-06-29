@@ -1,7 +1,6 @@
-package org.littlegit.server.db
+package com.littlegit.server.db
 
-import org.littlegit.server.application.LittleGitSettings
-import org.littlegit.server.repo.UserRepository
+import com.littlegit.server.application.LittleGitSettings
 import org.sql2o.Sql2o
 import javax.inject.Inject
 

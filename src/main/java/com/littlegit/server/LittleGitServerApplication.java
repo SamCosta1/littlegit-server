@@ -1,15 +1,15 @@
-package org.littlegit.server;
+package com.littlegit.server;
 
+import com.littlegit.server.application.CorsFilter;
+import com.littlegit.server.application.ExceptionMapper;
+import com.littlegit.server.application.MoshMessageBodyHandler;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.littlegit.server.application.CorsFilter;
-import org.littlegit.server.application.MoshMessageBodyHandler;
-
-import org.littlegit.server.application.ExceptionMapper;
 
 public class LittleGitServerApplication extends ResourceConfig {
 
     public LittleGitServerApplication() {
         LittleGitApplicationComponent applicationComponent = DaggerLittleGitApplicationComponent.create();
+
         register(applicationComponent.getUserController());
         register(new CorsFilter());
         register(new ExceptionMapper());
