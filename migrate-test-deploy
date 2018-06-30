@@ -3,3 +3,4 @@ npm install &&
 npm run init-db-config &&
 npm run migrate-up &&
 mvn test
+mvn war:war
