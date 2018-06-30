@@ -7,8 +7,8 @@ import javax.inject.Singleton
 
 @Singleton
 class UserService @Inject constructor (private val userRepository: UserRepository) {
-    fun getUser(): User {
-        return userRepository.getUser()
+    fun getUser(userId: Int): User? {
+        return userRepository.getUser(userId)
     }
 
 }

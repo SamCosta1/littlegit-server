@@ -28,7 +28,7 @@ public class UserResource {
     @GET
     @Path("/{id}")
     public User getUser(@PathParam("id") int id) {
-        return userService.getUser();
+        return userService.getUser(id);
 
     }
 }

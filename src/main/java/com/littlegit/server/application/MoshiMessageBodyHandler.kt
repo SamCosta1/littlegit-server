@@ -29,8 +29,8 @@ class MoshMessageBodyHandler : MessageBodyWriter<Any>, MessageBodyReader<Any> {
     }
 
     @Throws(IOException::class, WebApplicationException::class)
-    override fun readFrom(type: Class<Any>, genericType: Type, annotations: Array<Annotation>,
-                          mediaType: MediaType, httpHeaders: MultivaluedMap<String, String>, entityStream: InputStream): Any? {
+    override fun readFrom(type: Class<Any>?, genericType: Type, annotations: Array<Annotation>,
+                          mediaType: MediaType, httpHeaders: MultivaluedMap<String, String>?, entityStream: InputStream): Any? {
         val adapter = moshi.adapter<Any>(genericType)
         val source = Okio.buffer(Okio.source(entityStream))
         if (!source.request(1)) {

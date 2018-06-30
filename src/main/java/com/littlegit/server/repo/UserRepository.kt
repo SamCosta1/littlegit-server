@@ -8,12 +8,21 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor (private val dbCon: DatabaseConnector) {
 
-    companion object {
-        var a = 1
-    }
+    fun getUser(id: Int): User? {
 
-    fun getUser(): User {
-        return User("email@email", "john", "smith ${a++}")
+        val sql = """
+            SELECT * FROM Users
+            WHERE Id = :id
+        """
+        val params = mapOf("id" to id)
+
+        val users = dbCon.executeSelect(sql, User::class.java, params = params)
+
+        if (users == null || users.isEmpty()) {
+            return null
+        }
+
+        return users.first()
     }
 
 }

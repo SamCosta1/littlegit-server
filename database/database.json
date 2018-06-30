@@ -1,0 +1,10 @@
+{
+   "config": {
+      "host": "localhost",
+      "user": "root",
+      "password": "rootuser",
+      "database": "littlegit",
+      "driver": "mysql",
+      "multipleStatements": true
+   }
+}
