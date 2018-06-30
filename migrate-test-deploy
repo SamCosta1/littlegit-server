@@ -17,4 +17,4 @@ eval "$(ssh-agent -s)" # Start ssh-agent cache
 chmod 400 id_rsa # Allow read access to the private key
 ssh-add id_rsa # Add the private key to SSH
 
-scp -o "StrictHostKeyChecking no" ./target/littlegit*.war ubuntu@ec2-34-253-241-12.eu-west-1.compute.amazonaws.com:/~
+scp -o "StrictHostKeyChecking no" ./target/littlegit*.war ubuntu@ec2-34-253-241-12.eu-west-1.compute.amazonaws.com:~
