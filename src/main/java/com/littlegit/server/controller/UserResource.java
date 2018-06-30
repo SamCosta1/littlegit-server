@@ -2,9 +2,6 @@ package com.littlegit.server.controller;
 
 import com.littlegit.server.model.User;
 import com.littlegit.server.service.UserService;
-import com.littlegit.server.model.User;
-import com.littlegit.server.repo.UserRepository;
-import com.littlegit.server.service.UserService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
