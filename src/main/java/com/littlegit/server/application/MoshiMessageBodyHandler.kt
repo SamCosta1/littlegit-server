@@ -1,7 +1,6 @@
 package com.littlegit.server.application
 
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okio.Okio
 import java.io.IOException
 import java.io.InputStream

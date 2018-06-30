@@ -29,6 +29,7 @@ class UserRepository @Inject constructor (private val dbCon: DatabaseConnector,
             users?.firstOrNull()
         }
 
-        return cache.retrieve(MessageFormat.format(USER_CACHE_KEY, id), User::class.java, databaseAccessor)
+       // return cache.retrieve(MessageFormat.format(USER_CACHE_KEY, id), User::class.java, databaseAccessor)
+        return databaseAccessor.invoke()
     }
 }
