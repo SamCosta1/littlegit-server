@@ -12,7 +12,6 @@ mvn test
 mvn war:war
 
 # Deploy to server
-ssh-add id_rsa
 
 eval "$(ssh-agent -s)" # Start ssh-agent cache
 chmod 400 id_rsa # Allow read access to the private key
