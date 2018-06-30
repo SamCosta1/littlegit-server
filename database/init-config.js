@@ -12,19 +12,17 @@ const dbHost = process.env["LITTLEGIT_DB_HOST"];
 
 const dbSettings = settings.db;
 
-if (!dbSettings.host) {
+if (dbHost) {
     dbSettings.host = dbHost;
 }
 
-if (!dbSettings.user) {
+if (dbUser) {
     dbSettings.user = dbUser;
 }
 
-if (!dbSettings.password) {
+if (dbPass) {
     dbSettings.password = dbPass;
 }
-
-console.log(dbSettings)
 
 fs.writeFile(settingsPath, JSON.stringify(settings, null, 3));
 
