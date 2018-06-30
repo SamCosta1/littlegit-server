@@ -1,8 +1,21 @@
+# Run db migrations
 cd database
 npm install &&
 npm run init-db-config &&
 npm run migrate-up &&
 
+# Run tests
 cd ..
 mvn test
+
+# Build war
 mvn war:war
+
+# Deploy to server
+ssh-add id_rsa
+
+eval "$(ssh-agent -s)" # Start ssh-agent cache
+chmod 600 id_rsa # Allow read access to the private key
+ssh-add id_rsa # Add the private key to SSH
+
+scp ./target/littlegit*.war ubuntu@ec2-34-253-241-12.eu-west-1.compute.amazonaws.com:/~
