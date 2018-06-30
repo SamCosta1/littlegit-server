@@ -2,7 +2,6 @@ package com.littlegit.server;
 
 import com.littlegit.server.application.CorsFilter;
 import com.littlegit.server.application.ExceptionMapper;
-import com.littlegit.server.application.MoshMessageBodyHandler;
 import org.glassfish.jersey.server.ResourceConfig;
 
 public class LittleGitServerApplication extends ResourceConfig {
@@ -13,6 +12,6 @@ public class LittleGitServerApplication extends ResourceConfig {
         register(applicationComponent.getUserController());
         register(new CorsFilter());
         register(new ExceptionMapper());
-        register(new MoshMessageBodyHandler());
+        register(applicationComponent.getMoshiMessageBodyHandler());
     }
 }

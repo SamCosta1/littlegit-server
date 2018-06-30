@@ -7,6 +7,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.lang.reflect.Type
+import javax.inject.Inject
 import javax.ws.rs.Consumes
 import javax.ws.rs.Produces
 import javax.ws.rs.WebApplicationException
@@ -20,9 +21,10 @@ import javax.ws.rs.ext.Provider
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-class MoshMessageBodyHandler : MessageBodyWriter<Any>, MessageBodyReader<Any> {
+class MoshiMessageBodyHandler
+        @Inject constructor(private val moshi: Moshi)  : MessageBodyWriter<Any>, MessageBodyReader<Any> {
 
-    var moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+
     override fun isReadable(type: Class<*>, genericType: Type, annotations: Array<Annotation>,
                             mediaType: MediaType): Boolean {
         return mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE)

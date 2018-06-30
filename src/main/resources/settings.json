@@ -1,11 +1,13 @@
 {
-   "db": {
-      "host": "localhost",
-      "user": "root",
-      "password": "rootuser",
-      "database": "littlegit",
-      "driver": "mysql",
-      "multipleStatements": true
-   },
-   "redis": {}
+    "db": {
+        "host": "localhost",
+        "user": "root",
+        "password": "rootuser",
+        "database": "littlegit",
+        "driver": "mysql",
+        "multipleStatements": true
+    },
+    "redis": {
+        "host": "localhost"
+    }
 }

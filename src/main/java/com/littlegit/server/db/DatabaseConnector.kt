@@ -1,20 +1,15 @@
 package com.littlegit.server.db
 
-import com.littlegit.server.application.settings.LittleGitSettings
+import com.littlegit.server.application.settings.SettingsProvider
 import org.sql2o.Sql2o
-import java.sql.Connection
 import javax.inject.Inject
-import java.sql.SQLException
-import java.sql.DriverManager
 
 
-
-
-class DatabaseConnector @Inject constructor (val settings: LittleGitSettings) {
+class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider) {
     private val sql2o: Sql2o
 
     init {
-        val dbConfig = settings.db
+        val dbConfig = settingsProvider.settings.db
         Class.forName ("com.mysql.jdbc.Driver").newInstance()
         sql2o = Sql2o("jdbc:mysql://${dbConfig.host}:3306/${dbConfig.database}", dbConfig.user, dbConfig.password)
     }
