@@ -8,4 +8,4 @@ matrix:
 script:
   - mvn clean
   - mvn compile
-  - ./migrate-test-deploy
+  - if [ "$TRAVIS_BRANCH" = "develop" ]; then ./migrate-test-deploy; fi
