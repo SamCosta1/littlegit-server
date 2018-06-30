@@ -24,6 +24,8 @@ if (!dbSettings.password) {
     dbSettings.password = dbPass;
 }
 
+console.log(dbSettings)
+
 fs.writeFile(settingsPath, JSON.stringify(settings, null, 3));
 
 const dbConfig = {
