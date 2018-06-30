@@ -1,0 +1,5 @@
+cd database
+npm install &&
+npm run init-db-config &&
+npm run migrate-up &&
+mvn test

@@ -1,0 +1,11 @@
+language: java
+
+matrix:
+  include:
+    - os: linux
+      jdk: oraclejdk8
+
+script:
+  - mvn clean
+  - mvn compile
+  - if [ "$TRAVIS_BRANCH" = "develop" ]; then ./migrate-test-deploy; fi
