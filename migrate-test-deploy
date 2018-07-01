@@ -23,7 +23,8 @@ ssh ubuntu@ec2-34-253-241-12.eu-west-1.compute.amazonaws.com << EOI
 
  ~/apache-tomee-plume-7.0.4/bin/catalina.sh stop
  rm -rf ~/apache-tomee-plume-7.0.4/webapps/littlegit*
- cp ~/littlegit*.war ~/apache-tomee-plume-7.0.4/webapps/
+ rm -rf ~/apache-tomee-plume-7.0.4/webapps/ROOT*
+ mv ~/*.war ~/apache-tomee-plume-7.0.4/webapps/
  ~/apache-tomee-plume-7.0.4/bin/catalina.sh start
 
 EOI
