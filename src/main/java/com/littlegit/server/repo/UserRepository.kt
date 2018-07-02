@@ -17,7 +17,7 @@ class UserRepository @Inject constructor (private val dbCon: DatabaseConnector,
 
     fun getUser(id: Int): User? {
 
-        val databaseAccessor: () -> User? = {
+        return cache.retrieve(MessageFormat.format(USER_CACHE_KEY, id), User::class.java) {
             val sql = """
                 SELECT * FROM Users
                 WHERE Id = :id
@@ -28,8 +28,5 @@ class UserRepository @Inject constructor (private val dbCon: DatabaseConnector,
 
             users?.firstOrNull()
         }
-
-       // return cache.retrieve(MessageFormat.format(USER_CACHE_KEY, id), User::class.java, databaseAccessor)
-        return databaseAccessor.invoke()
     }
 }
