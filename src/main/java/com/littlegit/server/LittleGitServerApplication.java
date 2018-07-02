@@ -2,6 +2,7 @@ package com.littlegit.server;
 
 import com.littlegit.server.application.CorsFilter;
 import com.littlegit.server.application.ExceptionMapper;
+import com.littlegit.server.controller.UserResource;
 import org.glassfish.jersey.server.ResourceConfig;
 
 public class LittleGitServerApplication extends ResourceConfig {
