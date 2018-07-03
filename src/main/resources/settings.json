@@ -9,5 +9,6 @@
    },
    "redis": {
       "host": "localhost"
-   }
+   },
+   "isDebug": true
 }

@@ -17,7 +17,6 @@ import javax.ws.rs.ext.MessageBodyReader
 import javax.ws.rs.ext.MessageBodyWriter
 import javax.ws.rs.ext.Provider
 
-@Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 class MoshiMessageBodyHandler

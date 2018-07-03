@@ -11,14 +11,14 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Singleton
-public class UserResource {
+public class UserController {
 
     private UserService userService;
 
-    public UserResource() {}
+    public UserController() {}
 
     @Inject
-    public UserResource(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -26,6 +26,5 @@ public class UserResource {
     @Path("/{id}")
     public User getUser(@PathParam("id") int id) {
         return userService.getUser(id);
-
     }
 }
