@@ -1,5 +1,7 @@
 package com.littlegit.server.application
 
+import com.littlegit.server.model.InvalidModelException
+import com.littlegit.server.model.Validatable
 import com.squareup.moshi.Moshi
 import okio.Okio
 import java.io.IOException
@@ -37,13 +39,16 @@ class MoshiMessageBodyHandler
             throw NoContentException("Stream is empty")
         }
 
-        try {
-            return adapter.fromJson(source)
-        } catch (e: Exception) {
-            println(e)
+        val result = adapter.fromJson(source)
+
+        if (result is Validatable) {
+            val validateResult = result.validate()
+            if (!validateResult.isValid) {
+                throw InvalidModelException(validateResult)
+            }
         }
 
-        return null
+        return result
         // Note: we do not close the InputStream per the interface documentation.
     }
 

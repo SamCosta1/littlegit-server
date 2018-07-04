@@ -40,18 +40,17 @@ class UserRepository @Inject constructor (private val dbCon: DatabaseConnector,
 
         val user = CreateUserModel.fromSignupModel(signupModel, salt, passwordHash)
 
-        val idList = dbCon.executeSelect("""
+        return dbCon.executeInsert("""
             INSERT INTO Users (
                 firstName,
                 surname,
                 email,
                 passwordHash,
+                passwordSalt,
                 role,
                 languageCode
             )
             VALUES (:firstName, :surname, :email, :passwordHash, :passwordSalt, :role, :languageCode);
-        """, Int::class.java, user)
-
-        return idList?.firstOrNull()
+        """, model = user)
     }
 }

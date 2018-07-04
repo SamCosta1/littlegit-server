@@ -1,6 +1,7 @@
 package com.littlegit.server.application.exception
 
 import com.littlegit.server.application.settings.SettingsProvider
+import com.littlegit.server.model.InvalidModelException
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -8,11 +9,16 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 import javax.ws.rs.ext.ExceptionMapper
 import javax.ws.rs.ext.Provider
+import java.io.PrintWriter
+import sun.jvm.hotspot.HelloWorld.e
+import java.io.StringWriter
+
+
 
 @Provider
 class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
 
-    data class ErrorResponse(val rawMessage: String, val localisedMessage: String, var notes: String? = null)
+    data class ErrorResponse(val rawMessage: String, val localisedMessage: String, var notes: List<String>? = null)
 
     override fun toResponse(throwable: Throwable?): Response {
 
@@ -24,10 +30,20 @@ class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
                 status = 400
                 errorResponse = ErrorResponse("Bad Request", "")
             }
+            is InvalidModelException -> {
+                status = 400
+                errorResponse = ErrorResponse("Bad Request", "", throwable.result.invalidMessages)
+            }
         }
 
         if (SettingsProvider.isDebugMode) {
-            errorResponse.notes = throwable.toString()
+            val notes = errorResponse.notes?.toMutableList() ?: mutableListOf()
+
+            val sw = StringWriter()
+            throwable?.printStackTrace(PrintWriter(sw))
+            notes.add(sw.toString())
+
+            errorResponse.notes = notes
         }
 
         throwable?.printStackTrace()

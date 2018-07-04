@@ -2,6 +2,7 @@ package com.littlegit.server.db
 
 import com.littlegit.server.application.settings.SettingsProvider
 import org.sql2o.Sql2o
+import java.math.BigInteger
 import javax.inject.Inject
 
 
@@ -22,6 +23,21 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
         return this.executeSelect(sql, clazz, params, null)
     }
 
+    fun executeInsert(sql: String, params: Map<String, Any>? = null, model: Any? = null): Int {
+        val con = sql2o.open()
+        val query = con.createQuery(sql)
+
+        params?.forEach{paramName, value ->
+            query.addParameter(paramName, value)
+        }
+
+        if (model != null) {
+            query.bind(model)
+        }
+
+        return (query.executeUpdate().key as BigInteger).toInt()
+    }
+
     private fun <T> executeSelect(sql: String, clazz: Class<T>, params: Map<String, Any>? = null, model: Any? = null): List<T>? {
 
         val con = sql2o.open()
@@ -35,18 +51,6 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
             query.bind(model)
         }
 
-        var result: List<T>? = null
-        try {
-            result =  query.executeAndFetch(clazz)
-
-        } catch (e: Exception) {
-            println(e)
-
-        }
-
-
-
-        return result
+        return query.executeAndFetch(clazz)
     }
-
 }

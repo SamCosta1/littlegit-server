@@ -25,9 +25,4 @@ public class AuthController {
 
     public AuthController(){}
 
-    @POST
-    @Path("/signup")
-    public void signup(SignupModel signupModel) {
-        this.authService.signup(signupModel);
-    }
 }
