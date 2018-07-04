@@ -24,7 +24,7 @@ class AuthRoleAdapter: Converter<AuthRole> {
         try {
             return AuthRole.fromInt(authCode)!!
         } catch (e: Exception) {
-            throw NoSuchAuthRoleException()
+            throw NoSuchAuthRoleException(authCode)
         }
     }
 

@@ -10,8 +10,6 @@ import javax.ws.rs.ext.Provider
 import java.io.PrintWriter
 import java.io.StringWriter
 
-
-
 @Provider
 class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
 
@@ -26,6 +24,10 @@ class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
             is IllegalArgumentException -> {
                 status = 400
                 errorResponse = ErrorResponse("Bad Request", "")
+            }
+            is NoSuchAuthRoleException -> {
+                status = 400
+                errorResponse = ErrorResponse("Bad Request", "", listOf("AuthRole ${throwable.code} doesn't exist"))
             }
             is InvalidModelException -> {
                 status = 400
@@ -46,5 +48,4 @@ class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
         throwable?.printStackTrace()
         return Response.status(status).entity(errorResponse).type(MediaType.APPLICATION_JSON).build()
     }
-
 }

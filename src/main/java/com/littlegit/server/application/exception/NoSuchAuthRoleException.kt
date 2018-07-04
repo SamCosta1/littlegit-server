@@ -1,3 +1,3 @@
 package com.littlegit.server.application.exception
 
-class NoSuchAuthRoleException : Exception()
+class NoSuchAuthRoleException(val code: Int) : Exception()
