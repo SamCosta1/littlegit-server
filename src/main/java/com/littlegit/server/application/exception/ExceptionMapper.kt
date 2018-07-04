@@ -3,14 +3,11 @@ package com.littlegit.server.application.exception
 import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.model.InvalidModelException
 import java.lang.IllegalArgumentException
-import javax.inject.Inject
-import javax.inject.Singleton
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 import javax.ws.rs.ext.ExceptionMapper
 import javax.ws.rs.ext.Provider
 import java.io.PrintWriter
-import sun.jvm.hotspot.HelloWorld.e
 import java.io.StringWriter
 
 
