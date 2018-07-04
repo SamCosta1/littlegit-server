@@ -1,10 +1,9 @@
 package com.littlegit.server;
 
 import com.littlegit.server.application.MoshiMessageBodyHandler;
-import com.littlegit.server.application.exception.ExceptionMapper;
 import com.littlegit.server.controller.AuthController;
 import com.littlegit.server.controller.UserController;
-import com.littlegit.server.dagger.MoshiModule;
+import com.littlegit.server.moshi.MoshiModule;
 import dagger.Component;
 
 import javax.inject.Singleton;

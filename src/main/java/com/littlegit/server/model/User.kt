@@ -22,7 +22,7 @@ class CreateUserModel(val email: String,
                       val surname: String,
                       val passwordHash: String,
                       val passwordSalt: String,
-                      val role: Int,
+                      val role: AuthRole,
                       val languageCode: String) {
 
     companion object {
@@ -33,7 +33,7 @@ class CreateUserModel(val email: String,
                     signupModel.surname,
                     passwordHash,
                     salt,
-                    AuthRole.BasicUser.code,
+                    AuthRole.BasicUser,
                     signupModel.languageCode
             )
         }

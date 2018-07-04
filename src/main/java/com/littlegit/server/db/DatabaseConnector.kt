@@ -1,7 +1,10 @@
 package com.littlegit.server.db
 
 import com.littlegit.server.application.settings.SettingsProvider
+import com.littlegit.server.model.AuthRole
+import com.littlegit.server.moshi.AuthRoleAdapter
 import org.sql2o.Sql2o
+import org.sql2o.quirks.NoQuirks
 import java.math.BigInteger
 import javax.inject.Inject
 
@@ -12,7 +15,10 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
     init {
         val dbConfig = settingsProvider.settings.db
         Class.forName ("com.mysql.jdbc.Driver").newInstance()
-        sql2o = Sql2o("jdbc:mysql://${dbConfig.host}:3306/${dbConfig.database}", dbConfig.user, dbConfig.password)
+        sql2o = Sql2o("jdbc:mysql://${dbConfig.host}:3306/${dbConfig.database}",
+                        dbConfig.user,
+                        dbConfig.password,
+                        NoQuirks(mapOf(AuthRole::class.java to AuthRoleAdapter())))
     }
 
     fun <T> executeSelect(sql: String, clazz: Class<T>, model: Any): List<T>? {
