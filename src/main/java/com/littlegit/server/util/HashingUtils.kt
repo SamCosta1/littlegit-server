@@ -1,6 +1,5 @@
 package com.littlegit.server.util
 
-import com.oracle.util.Checksums.update
 import java.security.MessageDigest
 import java.security.SecureRandom
 
@@ -14,12 +13,26 @@ object HashingUtils {
         val concatenated = "$str--$salt"
         messageDigest.update(concatenated.toByteArray())
 
-        return String(messageDigest.digest())
+        return bytesToString(messageDigest.digest())
     }
 
     fun generateSalt(): String {
         val saltBytes = ByteArray(32)
         random.nextBytes(saltBytes)
-        return String(saltBytes)
+        return bytesToString(saltBytes)
+    }
+
+    private fun bytesToString(hash: ByteArray): String {
+        val hexString = StringBuffer()
+
+        for (i in hash.indices) {
+            if (0xff and hash[i].toInt() < 0x10) {
+                hexString.append("0" + Integer.toHexString(0xFF and hash[i].toInt()))
+            } else {
+                hexString.append(Integer.toHexString(0xFF and hash[i].toInt()))
+            }
+        }
+
+        return hexString.toString()
     }
 }

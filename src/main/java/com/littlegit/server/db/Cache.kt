@@ -58,4 +58,10 @@ class Cache @Inject constructor(private val moshi: Moshi, settingsProvider: Sett
 
         return obj
     }
+
+    fun delete(key: String) {
+        pool.resource.use { jedis ->
+            jedis.del(key)
+        }
+    }
 }

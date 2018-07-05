@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class UserService @Inject constructor (private val userRepository: UserRepository) {
     fun getUser(userId: Int): User? {
-        return userRepository.getUser(userId)
+        return userRepository.getFullUsers(userId)
     }
 
     fun createUser(signupModel: SignupModel) {

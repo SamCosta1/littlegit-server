@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 @Module
 public class MoshiModule {
 
-    @Provides @Singleton Moshi provideMoshi() {
+    @Provides @Singleton public Moshi provideMoshi() {
         return new Moshi.Builder()
                 .add(new KotlinJsonAdapterFactory())
                 .add(new AuthRoleAdapter())
