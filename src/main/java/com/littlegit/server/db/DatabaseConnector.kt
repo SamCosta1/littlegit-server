@@ -41,32 +41,40 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
     private fun <T> executeScalar(sql: String, clazz: Class<T>, params: Map<String, Any>?, model: Any? = null): List<T>? {
         val query = this.prepareQuery(sql, params, model)
 
-        return query.executeScalarList(clazz)
+        val result =  query.executeScalarList(clazz)
+        query.close()
+        return result
     }
 
     fun executeDelete(sql: String, params: Map<String, Any>? = null, model: Any? = null) {
         val query = this.prepareQuery(sql, params, model)
 
         query.executeUpdate()
+        query.close()
     }
 
     fun executeInsert(sql: String, params: Map<String, Any>? = null, model: Any? = null): Int {
         val query = this.prepareQuery(sql, params, model)
 
-        return (query.executeUpdate().key as BigInteger).toInt()
+        val result =  (query.executeUpdate().key as BigInteger).toInt()
+        query.close()
+
+        return result
     }
 
     private fun <T> executeSelect(sql: String, clazz: Class<T>, params: Map<String, Any>? = null, model: Any? = null): List<T>? {
 
         val query = this.prepareQuery(sql, params, model)
 
-        return query.executeAndFetch(clazz)
+        val result =  query.executeAndFetch(clazz)
+        query.close()
+
+        return result
     }
 
     private fun prepareQuery(sql: String, params: Map<String, Any>? = null, model: Any? = null): Query {
         val con = sql2o.open()
         val query = con.createQuery(sql)
-
         params?.forEach{paramName, value ->
             query.addParameter(paramName, value)
         }

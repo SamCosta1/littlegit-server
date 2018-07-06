@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 class HashingUtilsTests {
 
     @Test
-    fun testHash() {
+    fun testHash_IsSuccessful() {
         val stringToHash = "password"
         val salt = HashingUtils.generateSalt()
 
@@ -18,7 +18,7 @@ class HashingUtilsTests {
     }
 
     @Test
-    fun testGenerateUniqueSalt() {
+    fun testGenerateUniqueSalt_IsSuccessful() {
         val salts = mutableListOf<String>()
 
         for (i in 1..200) {

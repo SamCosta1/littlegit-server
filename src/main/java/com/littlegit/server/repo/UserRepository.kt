@@ -9,16 +9,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserRepository @Inject constructor (private val dbCon: DatabaseConnector,
+open class UserRepository @Inject constructor (private val dbCon: DatabaseConnector,
                                           private val cache: Cache) {
 
     companion object {
-        private const val USER_CACHE_KEY = "User(Id:{0})"
+        const val USER_CACHE_KEY_BY_ID = "User(Id:{0})"
+        const val USER_CACHE_BY_EMAIL = "User(Email:{0})"
     }
 
-    fun getFullUsers(id: Int): FullUser? {
+    fun getFullUser(id: Int): FullUser? {
 
-        return cache.retrieve(MessageFormat.format(USER_CACHE_KEY, id), FullUser::class.java) {
+        return cache.retrieve(MessageFormat.format(USER_CACHE_KEY_BY_ID, id), FullUser::class.java) {
             val sql = """
                 SELECT * FROM Users
                 WHERE Id = :id
@@ -29,6 +30,33 @@ class UserRepository @Inject constructor (private val dbCon: DatabaseConnector,
 
             users?.firstOrNull()
         }
+    }
+
+    fun getUser(email: String): User? {
+        return getFullUser(email)?.toUser()
+    }
+
+    fun getFullUser(email: String): FullUser? {
+
+        return cache.retrieve(MessageFormat.format(USER_CACHE_BY_EMAIL, email), FullUser::class.java) {
+            val sql = """
+                SELECT * FROM Users
+                WHERE email = :email
+            """
+            val params = mapOf("email" to email)
+
+            val users = dbCon.executeSelect(sql, FullUser::class.java, params = params)
+
+            if (users != null && users.size > 1) {
+                throw IllegalStateException("Multiple users have the same email")
+            }
+
+            users?.firstOrNull()
+        }
+    }
+
+    fun getUser(id: Int): User? {
+        return getFullUser(id)?.toUser()
     }
 
     fun createUser(signupModel: SignupModel): UserId? {
@@ -51,7 +79,6 @@ class UserRepository @Inject constructor (private val dbCon: DatabaseConnector,
         """, model = user)
     }
 
-    fun invalidateCache(userId: UserId) {
-        cache.delete(MessageFormat.format(USER_CACHE_KEY, userId))
-    }
+    fun invalidateCache(userId: UserId) = cache.delete(MessageFormat.format(USER_CACHE_KEY_BY_ID, userId))
+    fun invalidateCache(email: String) = cache.delete(MessageFormat.format(USER_CACHE_BY_EMAIL, email))
 }

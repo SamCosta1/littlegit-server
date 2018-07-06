@@ -1,7 +1,5 @@
 package com.littlegit.server.repo.testUtils
 
-import java.math.BigInteger
-
 object CleanupHelper {
 
     fun cleanupUser(email: String) {
@@ -17,5 +15,6 @@ object CleanupHelper {
         """, mapOf("email" to email))
 
         ids?.forEach { RepositoryHelper.userRepository.invalidateCache(it.toInt()) }
+        RepositoryHelper.userRepository.invalidateCache(email)
     }
 }

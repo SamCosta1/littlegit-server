@@ -8,14 +8,24 @@ class FullUser(id: UserId,
                val passwordHash: String,
                val passwordSalt: String,
                role: AuthRole,
-               languageCode: String): User(id, email, firstName, surname, role, languageCode)
+               languageCode: String): User(id, email, firstName, surname, role, languageCode) {
+
+    fun toUser(): User? {
+        return super.clone()
+    }
+}
 
 open class User(val id: UserId,
                val email: String,
                val firstName: String,
                val surname: String,
                val role: AuthRole,
-               val languageCode: String)
+               val languageCode: String) {
+
+    fun clone(): User? {
+        return User(id, email, firstName, surname, role, languageCode)
+    }
+}
 
 class CreateUserModel(val email: String,
                       val firstName: String,

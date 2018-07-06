@@ -9,6 +9,7 @@ import javax.ws.rs.ext.ExceptionMapper
 import javax.ws.rs.ext.Provider
 import java.io.PrintWriter
 import java.io.StringWriter
+import kotlin.math.E
 
 @Provider
 class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
@@ -32,6 +33,10 @@ class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
             is InvalidModelException -> {
                 status = 400
                 errorResponse = ErrorResponse("Bad Request", "", throwable.result.invalidMessages)
+            }
+            is EmailInUseException -> {
+                status = 400
+                errorResponse = ErrorResponse("Bad Request", "", listOf("${throwable.email} already in use"))
             }
         }
 
