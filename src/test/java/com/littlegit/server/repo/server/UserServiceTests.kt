@@ -12,7 +12,7 @@ import org.mockito.Mockito.mock
 class UserServiceTests {
 
     private lateinit var userService: UserService
-    private lateinit var userRepoMock: UserRepository 
+    private lateinit var userRepoMock: UserRepository
 
     @Before
     fun setup() {
