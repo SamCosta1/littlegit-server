@@ -63,6 +63,11 @@ open class UserRepository @Inject constructor (private val dbCon: DatabaseConnec
         val salt = HashingUtils.generateSalt()
         val passwordHash = HashingUtils.hash(signupModel.password, salt)
 
+        val validationResult = signupModel.validate()
+        if (validationResult.isNotValid) {
+            throw InvalidModelException(validationResult)
+        }
+
         val user = CreateUserModel.fromSignupModel(signupModel, salt, passwordHash)
 
         return dbCon.executeInsert("""
