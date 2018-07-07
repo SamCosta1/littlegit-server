@@ -9,7 +9,6 @@ import javax.ws.rs.ext.ExceptionMapper
 import javax.ws.rs.ext.Provider
 import java.io.PrintWriter
 import java.io.StringWriter
-import kotlin.math.E
 
 @Provider
 class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
@@ -26,7 +25,7 @@ class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
                 status = 400
                 errorResponse = ErrorResponse("Bad Request", "")
             }
-            is NoSuchAuthRoleException -> {
+            is NoSuchEnumValueException -> {
                 status = 400
                 errorResponse = ErrorResponse("Bad Request", "", listOf("AuthRole ${throwable.code} doesn't exist"))
             }

@@ -14,6 +14,7 @@ public class MoshiModule {
         return new Moshi.Builder()
                 .add(new KotlinJsonAdapterFactory())
                 .add(new AuthRoleAdapter())
+                .add(new TokenTypeAdapter())
                 .build();
     }
 

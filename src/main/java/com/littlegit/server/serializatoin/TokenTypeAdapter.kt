@@ -1,14 +1,14 @@
 package com.littlegit.server.serializatoin
 
 import com.littlegit.server.application.exception.NoSuchEnumValueException
-import com.littlegit.server.model.user.AuthRole
+import com.littlegit.server.model.auth.TokenType
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import org.sql2o.converters.Converter
 
-class AuthRoleAdapter: Converter<AuthRole> {
+class TokenTypeAdapter: Converter<TokenType> {
 
-    @FromJson override fun convert(raw: Any): AuthRole? {
+    @FromJson override fun convert(raw: Any): TokenType? {
         try {
 
             val rawInt = if (raw is Int)
@@ -16,14 +16,14 @@ class AuthRoleAdapter: Converter<AuthRole> {
             else if (raw is Double)
                 raw.toInt()
             else raw.toString().toBigDecimal().toInt()
-
-            return AuthRole.fromInt(rawInt)!!
+            
+            return TokenType.fromInt(rawInt)!!
 
         } catch (e: Exception) {
             throw NoSuchEnumValueException(raw)
         }
     }
 
-    @ToJson override fun toDatabaseParam(role: AuthRole): Any = role.code
+    @ToJson override fun toDatabaseParam(role: TokenType): Any = role.code
 
 }
