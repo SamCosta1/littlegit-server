@@ -2,7 +2,6 @@ package com.littlegit.server.repo.server
 
 import com.littlegit.server.application.exception.EmailInUseException
 import com.littlegit.server.model.InvalidModelException
-import com.littlegit.server.model.SignupModel
 import com.littlegit.server.repo.UserRepository
 import com.littlegit.server.repo.testUtils.UserHelper
 import com.littlegit.server.repo.testUtils.upon
