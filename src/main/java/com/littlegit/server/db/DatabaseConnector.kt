@@ -1,8 +1,8 @@
 package com.littlegit.server.db
 
 import com.littlegit.server.application.settings.SettingsProvider
-import com.littlegit.server.model.AuthRole
-import com.littlegit.server.moshi.AuthRoleAdapter
+import com.littlegit.server.model.user.AuthRole
+import com.littlegit.server.serializatoin.AuthRoleAdapter
 import org.sql2o.Query
 import org.sql2o.Sql2o
 import org.sql2o.quirks.NoQuirks

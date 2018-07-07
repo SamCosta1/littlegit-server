@@ -3,7 +3,7 @@ package com.littlegit.server.repo.testUtils
 import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.db.Cache
 import com.littlegit.server.db.DatabaseConnector
-import com.littlegit.server.moshi.MoshiModule
+import com.littlegit.server.serializatoin.MoshiModule
 import com.littlegit.server.repo.UserRepository
 
 object RepositoryHelper {

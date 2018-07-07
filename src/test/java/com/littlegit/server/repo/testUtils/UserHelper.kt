@@ -1,8 +1,8 @@
 package com.littlegit.server.repo.testUtils
 
-import com.littlegit.server.model.AuthRole
-import com.littlegit.server.model.SignupModel
-import com.littlegit.server.model.User
+import com.littlegit.server.model.user.AuthRole
+import com.littlegit.server.model.user.SignupModel
+import com.littlegit.server.model.user.User
 
 object UserHelper {
     fun createTestUser(id: Int = 1,

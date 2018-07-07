@@ -1,8 +1,8 @@
 package com.littlegit.server.service
 
 import com.littlegit.server.application.exception.EmailInUseException
-import com.littlegit.server.model.SignupModel
-import com.littlegit.server.model.User
+import com.littlegit.server.model.user.SignupModel
+import com.littlegit.server.model.user.User
 import com.littlegit.server.repo.UserRepository
 import javax.inject.Inject
 import javax.inject.Singleton

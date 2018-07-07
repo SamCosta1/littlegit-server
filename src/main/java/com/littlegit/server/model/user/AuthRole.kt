@@ -1,4 +1,4 @@
-package com.littlegit.server.model
+package com.littlegit.server.model.user
 
 enum class AuthRole(val code: Int) {
     Admin(1),

@@ -1,9 +1,9 @@
 package com.littlegit.server.repo.repo
 
-import com.littlegit.server.model.AuthRole
-import com.littlegit.server.model.FullUser
+import com.littlegit.server.model.user.AuthRole
+import com.littlegit.server.model.user.FullUser
 import com.littlegit.server.model.InvalidModelException
-import com.littlegit.server.model.SignupModel
+import com.littlegit.server.model.user.SignupModel
 import com.littlegit.server.repo.UserRepository
 import com.littlegit.server.repo.testUtils.CleanupHelper
 import com.littlegit.server.repo.testUtils.RepositoryHelper
@@ -34,10 +34,10 @@ class UserRepoTests {
 
         cleaner()
         val signupModel = SignupModel(email,
-                            "password",
-                            "TestCreateValidUser_FirstName",
-                             "TestCreateValidUser_Surname",
-                                      "en-GB")
+                "password",
+                "TestCreateValidUser_FirstName",
+                "TestCreateValidUser_Surname",
+                "en-GB")
 
         try {
             val id = RepositoryHelper.userRepository.createUser(signupModel)

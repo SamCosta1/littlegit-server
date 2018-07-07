@@ -3,6 +3,7 @@ package com.littlegit.server.repo
 import com.littlegit.server.db.Cache
 import com.littlegit.server.db.DatabaseConnector
 import com.littlegit.server.model.*
+import com.littlegit.server.model.user.*
 import com.littlegit.server.util.HashingUtils
 import java.text.MessageFormat
 import javax.inject.Inject

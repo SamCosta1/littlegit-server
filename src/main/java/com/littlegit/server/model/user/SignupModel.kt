@@ -1,5 +1,7 @@
-package com.littlegit.server.model
+package com.littlegit.server.model.user
 
+import com.littlegit.server.model.Validatable
+import com.littlegit.server.model.ValidatableResult
 import com.littlegit.server.util.ValidationUtils
 
 class SignupModel(val email: String,

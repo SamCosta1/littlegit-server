@@ -1,4 +1,4 @@
-package com.littlegit.server.model
+package com.littlegit.server.model.user
 
 typealias UserId = Int
 class FullUser(id: UserId,
@@ -16,11 +16,11 @@ class FullUser(id: UserId,
 }
 
 open class User(val id: UserId,
-               val email: String,
-               val firstName: String,
-               val surname: String,
-               val role: AuthRole,
-               val languageCode: String) {
+                val email: String,
+                val firstName: String,
+                val surname: String,
+                val role: AuthRole,
+                val languageCode: String) {
 
     fun clone(): User? {
         return User(id, email, firstName, surname, role, languageCode)
