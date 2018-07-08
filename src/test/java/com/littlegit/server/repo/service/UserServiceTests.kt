@@ -1,4 +1,4 @@
-package com.littlegit.server.repo.server
+package com.littlegit.server.repo.service
 
 import com.littlegit.server.application.exception.EmailInUseException
 import com.littlegit.server.model.InvalidModelException

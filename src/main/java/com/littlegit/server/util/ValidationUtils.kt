@@ -7,6 +7,7 @@ object ValidationUtils {
         return email.length > 5
                 && email.contains('@')
                 && email.contains('.')
+                && email.length < 50
     }
 
     fun validatePassword(passowrd: String): Boolean {

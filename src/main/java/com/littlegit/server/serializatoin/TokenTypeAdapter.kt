@@ -24,6 +24,6 @@ class TokenTypeAdapter: Converter<TokenType> {
         }
     }
 
-    @ToJson override fun toDatabaseParam(role: TokenType): Any = role.code
+    @ToJson override fun toDatabaseParam(role: TokenType) = role.code
 
 }

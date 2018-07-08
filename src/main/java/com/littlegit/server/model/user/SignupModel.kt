@@ -19,7 +19,6 @@ class SignupModel(val email: String,
         if (surname.isBlank())      { invalidMessages.add("Surname cannot be empty")    }
         if (languageCode.isBlank()) { invalidMessages.add("language code cannot be empty")    }
 
-        if (email.length > 50)          { invalidMessages.add("email too long") }
         if (surname.length > 50)        { invalidMessages.add("surname too long") }
         if (firstName.length > 50)      { invalidMessages.add("First name too long") }
         if (languageCode.length > 20)   { invalidMessages.add("Invalid language code") }

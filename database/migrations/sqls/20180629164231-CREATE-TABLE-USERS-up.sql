@@ -1,5 +1,5 @@
 CREATE TABLE Users (
-	id  						  INT NOT NULL AUTO_INCREMENT,
+	  id  						INT NOT NULL AUTO_INCREMENT,
     firstName 			VARCHAR(50),
     surname 				VARCHAR(50),
     email 					VARCHAR(50),

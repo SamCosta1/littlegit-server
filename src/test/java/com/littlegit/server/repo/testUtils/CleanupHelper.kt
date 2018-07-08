@@ -1,5 +1,7 @@
 package com.littlegit.server.repo.testUtils
 
+import com.littlegit.server.model.user.UserId
+
 object CleanupHelper {
 
     fun cleanupUser(email: String) {
@@ -14,7 +16,20 @@ object CleanupHelper {
 
         """, mapOf("email" to email))
 
-        ids?.forEach { RepositoryHelper.userRepository.invalidateCache(it.toInt()) }
+        ids?.forEach {
+            cleanupAuthTokensForUserId(it.toInt())
+            RepositoryHelper.userRepository.invalidateCache(it.toInt())
+        }
         RepositoryHelper.userRepository.invalidateCache(email)
+    }
+
+    fun cleanupAuthTokensForUserId(userId: UserId) {
+        RepositoryHelper.dbConnector.executeDelete("""
+
+            DELETE FROM UserTokens WHERE userId=:userId
+
+        """, mapOf("userId" to userId))
+
+        RepositoryHelper.authRepository.invlaidateCache(userId)
     }
 }

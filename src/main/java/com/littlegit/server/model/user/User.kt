@@ -10,7 +10,7 @@ class FullUser(id: UserId,
                role: AuthRole,
                languageCode: String): User(id, email, firstName, surname, role, languageCode) {
 
-    fun toUser(): User? {
+    fun toUser(): User {
         return super.clone()
     }
 }
@@ -22,7 +22,7 @@ open class User(val id: UserId,
                 val role: AuthRole,
                 val languageCode: String) {
 
-    fun clone(): User? {
+    fun clone(): User {
         return User(id, email, firstName, surname, role, languageCode)
     }
 }
