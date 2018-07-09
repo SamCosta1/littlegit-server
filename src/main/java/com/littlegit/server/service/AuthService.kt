@@ -22,8 +22,8 @@ class AuthService @Inject constructor (private val authRepository: AuthRepositor
         }
 
         // If we got here, details are correct yey!
-        val accessToken = authRepository.createAndSaveAccessToken(fullUser.id)
-        val refreshToken = authRepository.createAndSaveRefreshToken(fullUser.id)
+        val accessToken = authRepository.createAndSaveAccessToken(fullUser.id).token
+        val refreshToken = authRepository.createAndSaveRefreshToken(fullUser.id).token
 
         // This is important, don't want to send back the hash and salt
         val user = fullUser.toUser()

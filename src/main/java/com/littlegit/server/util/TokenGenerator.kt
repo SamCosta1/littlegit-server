@@ -16,7 +16,7 @@ class TokenGenerator @Inject constructor(private val settingsProvider: SettingsP
 
     fun generateAccessToken(userId: UserId): Token {
         val tokenDuration = settingsProvider.settings.tokens.accessTokenDuration
-        val expiryDate = OffsetDateTime.now().plusSeconds(tokenDuration.toLong())
+        val expiryDate = OffsetDateTime.now().plusSeconds(tokenDuration.toLong()).withNano(0)
         val token = generate(20)
 
         return Token(userId, token, TokenType.AccessToken, expiryDate)
@@ -24,7 +24,7 @@ class TokenGenerator @Inject constructor(private val settingsProvider: SettingsP
 
     fun generateRefreshToken(userId: UserId): Token {
         val tokenDuration = settingsProvider.settings.tokens.refreshTokenDuration
-        val expiryDate = OffsetDateTime.now().plusSeconds(tokenDuration.toLong())
+        val expiryDate = OffsetDateTime.now().plusSeconds(tokenDuration.toLong()).withNano(0)
         val token = generate(30)
 
         return Token(userId, token, TokenType.RefreshToken, expiryDate)

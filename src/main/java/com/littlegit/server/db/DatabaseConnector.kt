@@ -1,14 +1,17 @@
 package com.littlegit.server.db
 
 import com.littlegit.server.application.settings.SettingsProvider
+import com.littlegit.server.model.auth.TokenType
 import com.littlegit.server.model.user.AuthRole
 import com.littlegit.server.serializatoin.AuthRoleAdapter
+import com.littlegit.server.serializatoin.OffsetDateTimeAdapter
 import com.littlegit.server.serializatoin.TokenTypeAdapter
 import org.sql2o.Query
 import org.sql2o.Sql2o
 import org.sql2o.converters.Converter
 import org.sql2o.quirks.NoQuirks
 import java.math.BigInteger
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 
@@ -89,8 +92,9 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
     }
 
     private fun getAdapters(): Map<Class<out Any>, Converter<out Any>> =  mapOf(
-            AuthRole::class.java         to AuthRoleAdapter(),
-            TokenTypeAdapter::class.java to TokenTypeAdapter()
+            AuthRole::class.java  to AuthRoleAdapter(),
+            TokenType::class.java to TokenTypeAdapter(),
+            OffsetDateTime::class.java to OffsetDateTimeAdapter()
     )
 
 }
