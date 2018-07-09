@@ -94,7 +94,7 @@ class AuthRepoTests {
             assertTrue(token.expiry.isAfter(OffsetDateTime.now()))
 
         } finally {
-  //          cleaner()
+            cleaner()
         }
     }
 
