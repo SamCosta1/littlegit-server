@@ -10,5 +10,9 @@
    "redis": {
       "host": "localhost"
    },
+   "tokens": {
+       "accessTokenDuration": 3600,
+       "refreshTokenDuration": 700000
+   },
    "isDebug": true
 }

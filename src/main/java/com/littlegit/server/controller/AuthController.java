@@ -1,6 +1,7 @@
 package com.littlegit.server.controller;
 
-import com.littlegit.server.model.SignupModel;
+import com.littlegit.server.model.user.LoginModel;
+import com.littlegit.server.model.user.LoginResponseModel;
 import com.littlegit.server.service.AuthService;
 
 import javax.inject.Inject;
@@ -24,5 +25,11 @@ public class AuthController {
     }
 
     public AuthController(){}
+
+    @POST
+    @Path("/login")
+    public LoginResponseModel login(LoginModel loginDetails) {
+        return authService.login(loginDetails);
+    }
 
 }

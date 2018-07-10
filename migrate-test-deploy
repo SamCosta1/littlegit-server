@@ -1,13 +1,3 @@
-# Run db migrations
-cd database
-npm install &&
-npm run init-db-config &&
-npm run migrate-up &&
-
-# Run tests
-cd ..
-mvn test
-
 # Build war
 mvn war:war
 

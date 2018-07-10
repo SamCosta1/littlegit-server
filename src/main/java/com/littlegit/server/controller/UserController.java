@@ -1,13 +1,12 @@
 package com.littlegit.server.controller;
 
-import com.littlegit.server.model.SignupModel;
-import com.littlegit.server.model.User;
+import com.littlegit.server.model.user.SignupModel;
+import com.littlegit.server.model.user.User;
 import com.littlegit.server.service.UserService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)

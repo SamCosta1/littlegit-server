@@ -1,12 +1,17 @@
 package com.littlegit.server.db
 
 import com.littlegit.server.application.settings.SettingsProvider
-import com.littlegit.server.model.AuthRole
-import com.littlegit.server.moshi.AuthRoleAdapter
+import com.littlegit.server.model.auth.TokenType
+import com.littlegit.server.model.user.AuthRole
+import com.littlegit.server.serializatoin.AuthRoleAdapter
+import com.littlegit.server.serializatoin.OffsetDateTimeAdapter
+import com.littlegit.server.serializatoin.TokenTypeAdapter
 import org.sql2o.Query
 import org.sql2o.Sql2o
+import org.sql2o.converters.Converter
 import org.sql2o.quirks.NoQuirks
 import java.math.BigInteger
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 
@@ -19,7 +24,7 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
         sql2o = Sql2o("jdbc:mysql://${dbConfig.host}:3306/${dbConfig.database}",
                         dbConfig.user,
                         dbConfig.password,
-                        NoQuirks(mapOf(AuthRole::class.java to AuthRoleAdapter())))
+                        NoQuirks(getAdapters()))
     }
 
     fun <T> executeSelect(sql: String, clazz: Class<T>, model: Any): List<T>? {
@@ -85,4 +90,11 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
 
         return query
     }
+
+    private fun getAdapters(): Map<Class<out Any>, Converter<out Any>> =  mapOf(
+            AuthRole::class.java  to AuthRoleAdapter(),
+            TokenType::class.java to TokenTypeAdapter(),
+            OffsetDateTime::class.java to OffsetDateTimeAdapter()
+    )
+
 }

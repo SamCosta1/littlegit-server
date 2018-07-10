@@ -6,6 +6,9 @@ import java.io.InputStreamReader
 import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.io.File
+import java.util.*
+
 
 @Singleton
 class SettingsProvider @Inject constructor(private val moshi: Moshi) {
@@ -27,13 +30,44 @@ class SettingsProvider @Inject constructor(private val moshi: Moshi) {
         return _settings!!
     }
 
+    @Synchronized
     private fun parseSettings(): LittleGitSettings {
-        val reader = LittleGitSettings::class.java.getResourceAsStream("/settings.json")
-        val content = BufferedReader(InputStreamReader(reader)).lines().collect(Collectors.joining("\n"))
+        if (_settings != null) {
+            return _settings!!
+        }
 
-        val parsed = moshi.adapter(LittleGitSettings::class.java).fromJson(content)
+        val mainSettingsJson = this.getSettingsJson()
+        val debugSettings = this.getDebugSettings()
+
+        if (mainSettingsJson.isNullOrBlank() && debugSettings.isNullOrBlank()) {
+            throw Error("Settings not found")
+        }
+
+        val settingsToUse = mainSettingsJson ?: debugSettings
+        val parsed = moshi.adapter(LittleGitSettings::class.java).fromJson(settingsToUse!!)
         isDebugMode = parsed?.isDebug ?: false
 
-        return parsed ?: throw Exception("Settings not found or broken")
+        return parsed ?: throw Error("Settings not found or broken")
+    }
+
+    private fun getDebugSettings(): String? {
+        val reader = LittleGitSettings::class.java.getResourceAsStream("/settings.json")
+        return BufferedReader(InputStreamReader(reader)).lines().collect(Collectors.joining("\n"))
+    }
+
+    private fun getSettingsJson(): String? {
+        var scanner: Scanner? = null
+        var json: String? = null
+
+        try {
+            scanner = Scanner(File("${System.getProperty("user.home")}/littlegit-settings.json"))
+            json = scanner.useDelimiter("\\A").next()
+        } catch  (e: Exception) {
+            // This is valid, means we're using debug settings
+        } finally {
+            scanner?.close()
+        }
+
+        return json
     }
 }

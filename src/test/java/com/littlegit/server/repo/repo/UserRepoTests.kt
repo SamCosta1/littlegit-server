@@ -1,11 +1,13 @@
 package com.littlegit.server.repo.repo
 
-import com.littlegit.server.model.AuthRole
-import com.littlegit.server.model.FullUser
-import com.littlegit.server.model.SignupModel
+import com.littlegit.server.model.user.AuthRole
+import com.littlegit.server.model.user.FullUser
+import com.littlegit.server.model.InvalidModelException
+import com.littlegit.server.model.user.SignupModel
 import com.littlegit.server.repo.UserRepository
 import com.littlegit.server.repo.testUtils.CleanupHelper
 import com.littlegit.server.repo.testUtils.RepositoryHelper
+import com.littlegit.server.repo.testUtils.UserHelper
 import com.littlegit.server.util.HashingUtils
 import org.junit.Test
 import java.text.MessageFormat
@@ -14,6 +16,13 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class UserRepoTests {
+
+    @Test(expected = InvalidModelException::class)
+    fun testCreateInvalidUser_ThrowsException() {
+        val signupModel: SignupModel = UserHelper.createSignupModel("invalidEmail")
+
+        RepositoryHelper.userRepository.createUser(signupModel)
+    }
 
     @Test
     fun testCreateValidUser_IsSuccessful() {
@@ -25,10 +34,10 @@ class UserRepoTests {
 
         cleaner()
         val signupModel = SignupModel(email,
-                            "password",
-                            "TestCreateValidUser_FirstName",
-                             "TestCreateValidUser_Surname",
-                                      "en-GB")
+                "password",
+                "TestCreateValidUser_FirstName",
+                "TestCreateValidUser_Surname",
+                "en-GB")
 
         try {
             val id = RepositoryHelper.userRepository.createUser(signupModel)
