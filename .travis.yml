@@ -1,4 +1,8 @@
 language: java
+
+services:
+  - redis-server
+  
 matrix:
   include:
   - os: linux

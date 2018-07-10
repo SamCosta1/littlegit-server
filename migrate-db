@@ -2,4 +2,4 @@
 cd database
 npm install &&
 npm run init-db-config &&
-npm run migrate-up &&
+npm run migrate-up
