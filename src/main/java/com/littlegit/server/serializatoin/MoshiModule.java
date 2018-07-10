@@ -10,12 +10,17 @@ import javax.inject.Singleton;
 @Module
 public class MoshiModule {
 
+    private Moshi _moshi = null;
     @Provides @Singleton public Moshi provideMoshi() {
-        return new Moshi.Builder()
-                .add(new KotlinJsonAdapterFactory())
-                .add(new AuthRoleAdapter())
-                .add(new TokenTypeAdapter())
-                .build();
+        if (_moshi == null) {
+            _moshi = new Moshi.Builder()
+                    .add(new KotlinJsonAdapterFactory())
+                    .add(new AuthRoleAdapter())
+                    .add(new TokenTypeAdapter())
+                    .build();
+        }
+
+        return _moshi;
     }
 
 }

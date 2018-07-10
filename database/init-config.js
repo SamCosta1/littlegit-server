@@ -9,7 +9,7 @@ const settings = require(settingsPath);
 const dbPass = process.env["LITTLEGIT_DB_PASS"];
 const dbUser = process.env["LITTLEGIT_DB_USER"];
 const dbHost = process.env["LITTLEGIT_DB_HOST"];
-const redisHost = process.env["LITTLEGIT_REDIS_HOST"]
+const redisHost = process.env["LITTLEGIT_REDIS_HOST"];
 
 const dbSettings = settings.db;
 
