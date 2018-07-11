@@ -15,7 +15,7 @@ class AuthRepository @Inject constructor (private val dbCon: DatabaseConnector,
                                           private val tokenGenerator: TokenGenerator) {
 
     companion object {
-        private const val FULL_TOKEN = "FullToken(token:{0})"
+        const val FULL_TOKEN = "FullToken(token:{0})"
     }
 
     // Creates a new access token for a user and returns that access token

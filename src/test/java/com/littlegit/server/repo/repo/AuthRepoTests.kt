@@ -1,9 +1,13 @@
 package com.littlegit.server.repo.repo
 
+import com.littlegit.server.model.auth.Token
 import com.littlegit.server.model.auth.TokenType
+import com.littlegit.server.model.user.UserId
+import com.littlegit.server.repo.AuthRepository
 import com.littlegit.server.repo.testUtils.CleanupHelper
 import com.littlegit.server.repo.testUtils.RepositoryHelper
 import com.littlegit.server.repo.testUtils.UserHelper
+import com.littlegit.server.util.inject
 import org.junit.Test
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
@@ -60,10 +64,12 @@ class AuthRepoTests {
             val retrieved = RepositoryHelper.authRepository.getFullToken(token.token)
             assertNotNull(retrieved)
 
-            assertEquals(userId, retrieved?.userId)
-            assertEquals(token.token, retrieved?.token)
-            assertEquals(token.tokenType, retrieved?.tokenType)
-            assertTrue(token.expiry.isEqual(retrieved?.expiry))
+            // Ensure value was cached
+            val cacheKey = AuthRepository.FULL_TOKEN.inject(token.token)
+            val cached = RepositoryHelper.cache.get(cacheKey, Token::class.java)
+
+            assertToken(userId, token, retrieved)
+            assertToken(userId, token, cached)
         } finally {
             cleaner()
         }
@@ -118,13 +124,19 @@ class AuthRepoTests {
             val retrieved = RepositoryHelper.authRepository.getFullToken(token.token)
             assertNotNull(retrieved)
 
-            assertEquals(userId, retrieved?.userId)
-            assertEquals(token.token, retrieved?.token)
-            assertEquals(token.tokenType, retrieved?.tokenType)
-            assertTrue(token.expiry.isEqual(retrieved?.expiry))
+            assertToken(userId, token, retrieved)
 
         } finally {
             cleaner()
         }
     }
+
+    private fun assertToken(userId: UserId?, expected: Token, actual: Token?) {
+        assertEquals(userId, actual?.userId)
+        assertEquals(expected.token, actual?.token)
+        assertEquals(expected.tokenType, actual?.tokenType)
+        assertTrue(expected.expiry.isEqual(actual?.expiry))
+    }
+
+
 }
