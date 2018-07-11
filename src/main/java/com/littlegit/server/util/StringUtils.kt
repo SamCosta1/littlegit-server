@@ -1,5 +1,7 @@
 package com.littlegit.server.util
 
+import java.text.MessageFormat
+
 object StringUtils {
     fun generate(length: Int, vararg  includingChars: Char): String {
         val builder = StringBuilder()
@@ -28,3 +30,4 @@ object StringUtils {
     }
 }
 
+fun String.inject(vararg params: Any) = MessageFormat.format(this, *params)!!

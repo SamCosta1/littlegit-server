@@ -1,6 +1,8 @@
 package com.littlegit.server.serializatoin
 
 import com.littlegit.server.model.InvalidModelException
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.ToJson
 import org.sql2o.converters.Converter
 import sun.plugin.dom.exception.InvalidStateException
 import java.sql.Timestamp
@@ -28,5 +30,13 @@ class OffsetDateTimeAdapter: Converter<OffsetDateTime> {
         }
 
         return OffsetDateTime.ofInstant(raw.toInstant(), ZoneOffset.UTC).withNano(0)
+    }
+
+    @ToJson fun toJson(dateTime: OffsetDateTime?): String? {
+        return dateTime?.format(dateTimeFormatter)
+    }
+
+    @FromJson fun fromJson(dateTime: String): OffsetDateTime {
+        return OffsetDateTime.parse(dateTime, dateTimeFormatter).withNano(0)
     }
 }

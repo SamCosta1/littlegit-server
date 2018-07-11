@@ -5,7 +5,7 @@ import com.littlegit.server.db.DatabaseConnector
 import com.littlegit.server.model.*
 import com.littlegit.server.model.user.*
 import com.littlegit.server.util.HashingUtils
-import java.text.MessageFormat
+import com.littlegit.server.util.inject
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,7 +20,7 @@ open class UserRepository @Inject constructor (private val dbCon: DatabaseConnec
 
     fun getFullUser(id: Int): FullUser? {
 
-        return cache.retrieve(MessageFormat.format(USER_CACHE_KEY_BY_ID, id), FullUser::class.java) {
+        return cache.retrieve(USER_CACHE_KEY_BY_ID.inject(id), FullUser::class.java) {
             val sql = """
                 SELECT * FROM Users
                 WHERE Id = :id
@@ -39,7 +39,7 @@ open class UserRepository @Inject constructor (private val dbCon: DatabaseConnec
 
     fun getFullUser(email: String): FullUser? {
 
-        return cache.retrieve(MessageFormat.format(USER_CACHE_BY_EMAIL, email), FullUser::class.java) {
+        return cache.retrieve(USER_CACHE_BY_EMAIL.inject(email), FullUser::class.java) {
             val sql = """
                 SELECT * FROM Users
                 WHERE email = :email
@@ -85,6 +85,6 @@ open class UserRepository @Inject constructor (private val dbCon: DatabaseConnec
         """, model = user)
     }
 
-    fun invalidateCache(userId: UserId) = cache.delete(MessageFormat.format(USER_CACHE_KEY_BY_ID, userId))
-    fun invalidateCache(email: String) = cache.delete(MessageFormat.format(USER_CACHE_BY_EMAIL, email))
+    fun invalidateCache(userId: UserId) = cache.delete(USER_CACHE_KEY_BY_ID.inject(userId))
+    fun invalidateCache(email: String) = cache.delete(USER_CACHE_BY_EMAIL.inject(email))
 }

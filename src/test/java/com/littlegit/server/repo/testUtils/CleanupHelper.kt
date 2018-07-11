@@ -30,6 +30,6 @@ object CleanupHelper {
 
         """, mapOf("userId" to userId))
 
-        RepositoryHelper.authRepository.invlaidateCache(userId)
+        //RepositoryHelper.authRepository.invlaidateCache(userId)
     }
 }
