@@ -66,11 +66,9 @@ class AuthRepoTests {
 
         try {
             val userId = RepositoryHelper.userRepository.createUser(UserHelper.createSignupModel(testEmail))
-            println("UserId: $userId")
             assertNotNull(userId)
 
             val token = authRepo.createAndSaveAccessToken(userId!!)
-            println("Token: ${token.toString()}")
             val retrievedToken = RepositoryHelper.authRepository.getFullToken(token.token)
 
             println("Retrieved Token: ${retrievedToken.toString()}")
@@ -81,7 +79,6 @@ class AuthRepoTests {
 
             // Should no longer exist
             val reRetrievedToken = RepositoryHelper.authRepository.getFullToken(token.token)
-            println("ReRetrieved Token: ${reRetrievedToken.toString()}")
             assertNull(reRetrievedToken)
 
         } finally {
