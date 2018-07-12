@@ -52,7 +52,7 @@ class AuthRepoTests {
     @Test
     fun testGetAuthToken_WhenExpired_ReturnsNull() {
         val testEmail = "get.auth@token.test"
-        val tokenDuration = 2
+        val tokenDuration = 5
         val cleaner = {
             CleanupHelper.cleanupUser(testEmail)
         }
