@@ -8,7 +8,11 @@ import com.littlegit.server.service.UserService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
+
+import com.littlegit.server.util.CastingUtilsKt;
 
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
@@ -29,7 +33,8 @@ public class UserController {
     @Path("/{id}")
     @Secured({ AuthRole.Admin, AuthRole.OrganizationAdmin, AuthRole.BasicUser})
     public User getUser(@PathParam("id") int id) {
-        return userService.getUser(id);
+
+        return userService.getUser(null/*CastingUtilsKt.asUser(securityContext.getUserPrincipal())*/, id);
     }
 
     @POST

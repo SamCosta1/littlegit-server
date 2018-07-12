@@ -16,4 +16,4 @@ data class LoginModel(val email: String, val password: String) : Validatable {
     }
 }
 
-class LoginResponseModel(val accessToken: String, val refreshToken: String, val user: User)
+class LoginResponseModel(val accessToken: String, val refreshToken: String, val scheme: String, val user: User)
