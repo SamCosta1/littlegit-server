@@ -1,5 +1,7 @@
 package com.littlegit.server.controller;
 
+import com.littlegit.server.authfilter.Secured;
+import com.littlegit.server.model.user.AuthRole;
 import com.littlegit.server.model.user.SignupModel;
 import com.littlegit.server.model.user.User;
 import com.littlegit.server.service.UserService;
@@ -25,6 +27,7 @@ public class UserController {
 
     @GET
     @Path("/{id}")
+    @Secured({ AuthRole.Admin, AuthRole.OrganizationAdmin, AuthRole.BasicUser})
     public User getUser(@PathParam("id") int id) {
         return userService.getUser(id);
     }

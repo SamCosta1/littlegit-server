@@ -21,6 +21,7 @@ public class LittleGitServerApplication extends ResourceConfig {
     public LittleGitServerApplication() {
         register(applicationComponent.getUserController());
         register(applicationComponent.getAuthController());
+        register(applicationComponent.getAuthFilter());
         register(new CorsFilter());
         register(new ExceptionMapper());
         register(applicationComponent.getMoshiMessageBodyHandler());
