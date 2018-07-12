@@ -52,7 +52,7 @@ class AuthRepoTests {
     @Test
     fun testGetAuthToken_WhenExpired_ReturnsNull() {
         val testEmail = "get.auth@token.test"
-        val tokenDuration = 2
+        val tokenDuration = 5
         val cleaner = {
             CleanupHelper.cleanupUser(testEmail)
         }
@@ -71,6 +71,7 @@ class AuthRepoTests {
             val token = authRepo.createAndSaveAccessToken(userId!!)
             val retrievedToken = RepositoryHelper.authRepository.getFullToken(token.token)
 
+            println("Retrieved Token: ${retrievedToken.toString()}")
             // Should exist now
             assertToken(userId, token, retrievedToken)
 
