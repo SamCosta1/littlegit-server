@@ -124,7 +124,12 @@ class AuthRepoTests {
             val retrieved = RepositoryHelper.authRepository.getFullToken(token.token)
             assertNotNull(retrieved)
 
+            // Ensure value was cached
+            val cacheKey = AuthRepository.FULL_TOKEN.inject(token.token)
+            val cached = RepositoryHelper.cache.get(cacheKey, Token::class.java)
+
             assertToken(userId, token, retrieved)
+            assertToken(userId, token, cached)
 
         } finally {
             cleaner()
