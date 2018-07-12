@@ -24,7 +24,7 @@ class UserService @Inject constructor (private val userRepository: UserRepositor
         }
 
         if (currentUser.role == AuthRole.Admin) {
-            return userRepository.getFullUser(userId) ?: throw NotFoundException(User::class)
+            return userRepository.getUser(userId) ?: throw NotFoundException(User::class)
         } else {
             throw UserForbiddenException()
         }

@@ -39,6 +39,7 @@ class AuthRepository @Inject constructor (private val dbCon: DatabaseConnector,
                 SELECT  userId, token, tokenType, expiry
                 FROM    UserTokens
                 WHERE   token = :token
+                AND     expiry > NOW()
             """, Token::class.java, params = mapOf("token" to token))?.firstOrNull()
         }
     }
