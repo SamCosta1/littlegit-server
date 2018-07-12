@@ -21,7 +21,16 @@ class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
         var errorResponse = ErrorResponse("Server dead", "Something went wrong")
 
         when (throwable) {
-            is UserUnauthorizedException -> {
+            is UserForbiddenException -> {
+                status = 403
+                errorResponse = ErrorResponse("Forbidden", "")
+            }
+            is NotFoundException -> {
+                status = 404
+                errorResponse = ErrorResponse("Not found", "")
+            }
+            is UserUnauthorizedException,
+            is InvalidTokenException -> {
                 status = 401
                 errorResponse = ErrorResponse("Unauthorized", "")
             }

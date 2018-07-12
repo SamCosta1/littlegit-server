@@ -9,6 +9,7 @@ import com.littlegit.server.repo.testUtils.CleanupHelper
 import com.littlegit.server.repo.testUtils.RepositoryHelper
 import com.littlegit.server.repo.testUtils.UserHelper
 import com.littlegit.server.util.HashingUtils
+import com.littlegit.server.util.inject
 import org.junit.Test
 import java.text.MessageFormat
 import kotlin.test.assertEquals
@@ -44,7 +45,7 @@ class UserRepoTests {
 
             assertNotNull(id)
 
-            val cacheKey = MessageFormat.format(UserRepository.USER_CACHE_KEY_BY_ID, id)
+            val cacheKey = UserRepository.USER_CACHE_KEY_BY_ID.inject(id!!)
 
             // Check exists in db
             RepositoryHelper.cache.delete(cacheKey)

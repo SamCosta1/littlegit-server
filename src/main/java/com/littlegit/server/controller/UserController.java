@@ -1,12 +1,18 @@
 package com.littlegit.server.controller;
 
+import com.littlegit.server.authfilter.Secured;
+import com.littlegit.server.model.user.AuthRole;
 import com.littlegit.server.model.user.SignupModel;
 import com.littlegit.server.model.user.User;
 import com.littlegit.server.service.UserService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
+
+import com.littlegit.server.util.CastingUtilsKt;
 
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,8 +31,11 @@ public class UserController {
 
     @GET
     @Path("/{id}")
-    public User getUser(@PathParam("id") int id) {
-        return userService.getUser(id);
+    @Secured({ AuthRole.Admin, AuthRole.OrganizationAdmin, AuthRole.BasicUser})
+    public User getUser(@PathParam("id") int id,
+                        @Context SecurityContext context) {
+
+        return userService.getUser(CastingUtilsKt.asUser(context.getUserPrincipal()), id);
     }
 
     @POST

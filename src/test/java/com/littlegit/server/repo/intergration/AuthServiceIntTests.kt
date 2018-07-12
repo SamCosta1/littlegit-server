@@ -1,11 +1,14 @@
 package com.littlegit.server.repo.intergration
 
+import com.littlegit.server.authfilter.AuthConstants
 import com.littlegit.server.model.user.LoginModel
 import com.littlegit.server.repo.testUtils.CleanupHelper
 import com.littlegit.server.repo.testUtils.RepositoryHelper
 import com.littlegit.server.repo.testUtils.UserHelper
 import com.littlegit.server.service.AuthService
 import org.junit.Test
+import kotlin.math.log
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
@@ -36,6 +39,7 @@ class AuthServiceIntTests{
             assertNotNull(loginResult)
             assertTrue(loginResult.accessToken.isNotBlank())
             assertTrue(loginResult.refreshToken.isNotBlank())
+            assertEquals(AuthConstants.AuthScheme, loginResult.scheme)
             UserHelper.assertSignupModel(testUserSignupModel, loginResult.user)
 
         } finally {

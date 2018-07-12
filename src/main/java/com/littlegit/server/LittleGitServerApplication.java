@@ -9,7 +9,6 @@ import java.util.Random;
 
 public class LittleGitServerApplication extends ResourceConfig {
 
-    private static int rand = new Random().nextInt();
     private static LittleGitApplicationComponent applicationComponent;
     static {
 
@@ -21,6 +20,7 @@ public class LittleGitServerApplication extends ResourceConfig {
     public LittleGitServerApplication() {
         register(applicationComponent.getUserController());
         register(applicationComponent.getAuthController());
+        register(applicationComponent.getAuthFilter());
         register(new CorsFilter());
         register(new ExceptionMapper());
         register(applicationComponent.getMoshiMessageBodyHandler());

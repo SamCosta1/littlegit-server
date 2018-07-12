@@ -1,5 +1,7 @@
 package com.littlegit.server.model.user
 
+import java.security.Principal
+
 typealias UserId = Int
 class FullUser(id: UserId,
                email: String,
@@ -20,10 +22,16 @@ open class User(val id: UserId,
                 val firstName: String,
                 val surname: String,
                 val role: AuthRole,
-                val languageCode: String) {
+                val languageCode: String): Principal {
+
+    override fun getName(): String = "$firstName $surname"
 
     fun clone(): User {
         return User(id, email, firstName, surname, role, languageCode)
+    }
+
+    fun hasAnyRoleOf(allowedRoles: List<AuthRole>): Boolean {
+        return allowedRoles.contains(role)
     }
 }
 
