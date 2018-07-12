@@ -6,6 +6,7 @@ import com.littlegit.server.model.auth.Token
 import com.littlegit.server.model.user.UserId
 import com.littlegit.server.util.TokenGenerator
 import com.littlegit.server.util.inject
+import java.time.OffsetDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,13 +35,22 @@ class AuthRepository @Inject constructor (private val dbCon: DatabaseConnector,
     }
 
     fun getFullToken(token: String): Token? {
-        return cache.retrieve(FULL_TOKEN.inject(token), Token::class.java) {
+        val retrieved = cache.retrieve(FULL_TOKEN.inject(token), Token::class.java) {
             dbCon.executeSelect("""
                 SELECT  userId, token, tokenType, expiry
                 FROM    UserTokens
                 WHERE   token = :token
-                AND     expiry > NOW()
             """, Token::class.java, params = mapOf("token" to token))?.firstOrNull()
+        } ?: return null
+
+        return if (retrieved.expiry.isAfter(OffsetDateTime.now())) {
+            retrieved
+        } else {
+            // Most common use case is after retrieving a null token, that the user tries to re-authorize i.e it'll be
+            // rare that the same token is checked twice so we invalidate the cache to free up space
+
+            invalidateCache(token)
+            null
         }
     }
 
