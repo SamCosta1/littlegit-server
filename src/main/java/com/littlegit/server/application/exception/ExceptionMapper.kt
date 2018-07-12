@@ -29,7 +29,8 @@ class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
                 status = 404
                 errorResponse = ErrorResponse("Not found", "")
             }
-            is UserUnauthorizedException -> {
+            is UserUnauthorizedException,
+            is InvalidTokenException -> {
                 status = 401
                 errorResponse = ErrorResponse("Unauthorized", "")
             }

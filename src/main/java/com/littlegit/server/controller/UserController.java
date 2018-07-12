@@ -32,9 +32,10 @@ public class UserController {
     @GET
     @Path("/{id}")
     @Secured({ AuthRole.Admin, AuthRole.OrganizationAdmin, AuthRole.BasicUser})
-    public User getUser(@PathParam("id") int id) {
+    public User getUser(@PathParam("id") int id,
+                        @Context SecurityContext context) {
 
-        return userService.getUser(null/*CastingUtilsKt.asUser(securityContext.getUserPrincipal())*/, id);
+        return userService.getUser(CastingUtilsKt.asUser(context.getUserPrincipal()), id);
     }
 
     @POST
