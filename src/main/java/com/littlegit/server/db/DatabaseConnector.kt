@@ -48,6 +48,7 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
 
         val result =  query.executeScalarList(clazz)
         query.close()
+        query.connection.close()
         return result
     }
 
@@ -56,6 +57,7 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
 
         query.executeUpdate()
         query.close()
+        query.connection.close()
     }
 
     fun executeInsert(sql: String, params: Map<String, Any>? = null, model: Any? = null): Int {
@@ -63,6 +65,7 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
 
         val result =  (query.executeUpdate().key as BigInteger).toInt()
         query.close()
+        query.connection.close()
 
         return result
     }
@@ -73,6 +76,7 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
 
         val result =  query.executeAndFetch(clazz)
         query.close()
+        query.connection.close()
 
         return result
     }
@@ -83,7 +87,6 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
         params?.forEach{paramName, value ->
             query.addParameter(paramName, value)
         }
-
         if (model != null) {
             query.bind(model)
         }
