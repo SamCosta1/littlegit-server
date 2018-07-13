@@ -2,6 +2,7 @@ package com.littlegit.server.application.exception
 
 import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.model.InvalidModelException
+import com.squareup.moshi.JsonDataException
 import java.lang.IllegalArgumentException
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
@@ -34,7 +35,8 @@ class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
                 status = 401
                 errorResponse = ErrorResponse("Unauthorized", "")
             }
-            is IllegalArgumentException -> {
+            is IllegalArgumentException,
+            is JsonDataException -> {
                 status = 400
                 errorResponse = ErrorResponse("Bad Request", "")
             }

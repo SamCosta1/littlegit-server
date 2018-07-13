@@ -1,5 +1,7 @@
 package com.littlegit.server.controller;
 
+import com.littlegit.server.model.auth.RefreshRequest;
+import com.littlegit.server.model.auth.RefreshResponse;
 import com.littlegit.server.model.user.LoginModel;
 import com.littlegit.server.model.user.LoginResponseModel;
 import com.littlegit.server.service.AuthService;
@@ -30,6 +32,12 @@ public class AuthController {
     @Path("/login")
     public LoginResponseModel login(LoginModel loginDetails) {
         return authService.login(loginDetails);
+    }
+
+    @POST
+    @Path("/refresh")
+    public RefreshResponse refreshAccessToken(RefreshRequest request) {
+        return authService.refreshToken(request);
     }
 
 }

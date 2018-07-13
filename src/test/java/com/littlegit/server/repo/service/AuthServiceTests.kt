@@ -2,6 +2,7 @@ package com.littlegit.server.repo.service
 
 import com.littlegit.server.application.exception.InvalidTokenException
 import com.littlegit.server.application.exception.NotFoundException
+import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.model.auth.Token
 import com.littlegit.server.model.auth.TokenType
 import com.littlegit.server.repo.AuthRepository
@@ -21,12 +22,14 @@ class AuthServiceTests {
     private lateinit var authService: AuthService
     private lateinit var userRepoMock: UserRepository
     private lateinit var authRepoMock: AuthRepository
+    private lateinit var settingsProviderMock: SettingsProvider
 
     @Before
     fun setup() {
         userRepoMock = mock(UserRepository::class.java)
         authRepoMock = mock(AuthRepository::class.java)
-        authService = AuthService(authRepoMock, userRepoMock)
+        settingsProviderMock = mock(SettingsProvider::class.java)
+        authService = AuthService(authRepoMock, userRepoMock, settingsProviderMock)
     }
 
     @Test(expected = InvalidTokenException::class)

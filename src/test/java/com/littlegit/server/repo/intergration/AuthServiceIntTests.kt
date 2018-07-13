@@ -14,7 +14,9 @@ import kotlin.test.assertTrue
 
 class AuthServiceIntTests{
 
-    private val authService: AuthService = AuthService(RepositoryHelper.authRepository, RepositoryHelper.userRepository)
+    private val authService: AuthService = AuthService( RepositoryHelper.authRepository,
+                                                        RepositoryHelper.userRepository,
+                                                        RepositoryHelper.settingsProvider)
 
     @Test
     fun testValidLogin() {
