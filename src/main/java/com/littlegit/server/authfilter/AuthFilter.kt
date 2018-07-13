@@ -54,7 +54,7 @@ constructor(private val authService: AuthService) : ContainerRequestFilter {
         if (authHeader?.startsWith(AuthConstants.AuthScheme) == true) {
 
             val token = authHeader.removePrefix("${AuthConstants.AuthScheme} ")
-            val user = authService.getUserForToken(token) ?: throw NotFoundException(User::class)
+            val user = authService.getUserForToken(token)
 
             if (!user.hasAnyRoleOf(allowedRoles)) {
                 throw UserForbiddenException()

@@ -24,12 +24,18 @@ object CleanupHelper {
     }
 
     fun cleanupAuthTokensForUserId(userId: UserId) {
+        val tokens = RepositoryHelper.dbConnector.executeScalar("""
+            SELECT token FROM UserTokens WHERE userId=:userId
+        """, String::class.java, params = mapOf("userId" to userId))
+
         RepositoryHelper.dbConnector.executeDelete("""
 
             DELETE FROM UserTokens WHERE userId=:userId
 
         """, mapOf("userId" to userId))
 
-        //RepositoryHelper.authRepository.invlaidateCache(userId)
+        tokens?.forEach {
+            RepositoryHelper.authRepository.invalidateCache(it)
+        }
     }
 }

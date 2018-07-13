@@ -71,10 +71,10 @@ class AuthRepoTests {
             val token = authRepo.createAndSaveAccessToken(userId!!)
             val retrievedToken = RepositoryHelper.authRepository.getFullToken(token.token)
 
-            println("Retrieved Token: ${retrievedToken.toString()}")
             // Should exist now
             assertToken(userId, token, retrievedToken)
 
+            // Sleep to give the token time to expire
             Thread.sleep((tokenDuration.toLong() + 1) * 1000)
 
             // Should no longer exist
