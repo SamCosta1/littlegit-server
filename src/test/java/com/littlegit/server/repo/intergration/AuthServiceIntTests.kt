@@ -19,7 +19,7 @@ class AuthServiceIntTests{
                                                         RepositoryHelper.settingsProvider)
 
     @Test
-    fun testValidLogin() {
+    fun testValidLogin_IsSuccessful() {
         val testEmail = "gimply@lonely.mountain.com"
         val testPassword = "password"
 
@@ -48,4 +48,6 @@ class AuthServiceIntTests{
             cleaner()
         }
     }
+
+
 }
