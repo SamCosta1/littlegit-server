@@ -1,13 +1,13 @@
 package com.littlegit.server.authfilter
 
-import com.littlegit.server.application.exception.NotFoundException
 import com.littlegit.server.application.exception.UserForbiddenException
 import com.littlegit.server.application.exception.UserUnauthorizedException
 import com.littlegit.server.model.user.AuthRole
-import com.littlegit.server.model.user.User
 import com.littlegit.server.service.AuthService
-import sun.net.www.protocol.http.AuthScheme
-
+import java.io.IOException
+import java.lang.reflect.AnnotatedElement
+import java.security.Principal
+import java.util.*
 import javax.annotation.Priority
 import javax.inject.Inject
 import javax.ws.rs.Priorities
@@ -15,11 +15,6 @@ import javax.ws.rs.container.ContainerRequestContext
 import javax.ws.rs.container.ContainerRequestFilter
 import javax.ws.rs.container.ResourceInfo
 import javax.ws.rs.core.Context
-import java.io.IOException
-import java.lang.reflect.AnnotatedElement
-import java.security.Principal
-import java.util.ArrayList
-import java.util.Arrays
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.SecurityContext
 
@@ -30,15 +25,15 @@ open class AuthFilter @Inject
 constructor(private val authService: AuthService) : ContainerRequestFilter {
 
     @Context
-    private val resourceInfo: ResourceInfo? = null
+    private lateinit var resourceInfo: ResourceInfo
 
     private val allowedRoles: List<AuthRole>
         get() {
 
-            val resourceClass = resourceInfo?.resourceClass
+            val resourceClass = resourceInfo.resourceClass
             val classRoles = extractRoles(resourceClass)
 
-            val resourceMethod = resourceInfo?.resourceMethod
+            val resourceMethod = resourceInfo.resourceMethod
             val methodRoles = extractRoles(resourceMethod)
             return if (methodRoles.isEmpty()) {
                 classRoles
