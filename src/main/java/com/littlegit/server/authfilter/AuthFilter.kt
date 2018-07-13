@@ -26,7 +26,7 @@ import javax.ws.rs.core.SecurityContext
 
 @Secured
 @Priority(Priorities.AUTHORIZATION)
-class AuthFilter @Inject
+open class AuthFilter @Inject
 constructor(private val authService: AuthService) : ContainerRequestFilter {
 
     @Context
