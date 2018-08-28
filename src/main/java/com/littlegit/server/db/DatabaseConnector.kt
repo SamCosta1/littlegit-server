@@ -4,6 +4,7 @@ import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.model.auth.TokenType
 import com.littlegit.server.model.user.AuthRole
 import com.littlegit.server.serializatoin.AuthRoleAdapter
+import com.littlegit.server.serializatoin.EnumAdapters
 import com.littlegit.server.serializatoin.OffsetDateTimeAdapter
 import com.littlegit.server.serializatoin.TokenTypeAdapter
 import org.sql2o.Query
@@ -63,11 +64,11 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
     fun executeInsert(sql: String, params: Map<String, Any>? = null, model: Any? = null): Int {
         val query = this.prepareQuery(sql, params, model)
 
-        val result =  (query.executeUpdate().key as BigInteger).toInt()
+        val result =  (query.executeUpdate().key as? BigInteger)?.toInt()
         query.close()
         query.connection.close()
 
-        return result
+        return result ?: -1
     }
 
     private fun <T> executeSelect(sql: String, clazz: Class<T>, params: Map<String, Any>? = null, model: Any? = null): List<T>? {
@@ -94,10 +95,15 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
         return query
     }
 
-    private fun getAdapters(): Map<Class<out Any>, Converter<out Any>> =  mapOf(
-            AuthRole::class.java  to AuthRoleAdapter(),
+    private fun getAdapters(): Map<Class<out Any>, Converter<out Any>> {
+
+        val adapters = mutableMapOf(
             TokenType::class.java to TokenTypeAdapter(),
             OffsetDateTime::class.java to OffsetDateTimeAdapter()
-    )
+        )
 
+        EnumAdapters.addAllTo(adapters)
+
+        return adapters
+    }
 }

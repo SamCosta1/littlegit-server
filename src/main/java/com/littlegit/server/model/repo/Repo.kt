@@ -1,5 +1,7 @@
-package com.littlegit.server.model
+package com.littlegit.server.model.repo
 
+import com.littlegit.server.model.Validatable
+import com.littlegit.server.model.ValidatableResult
 import com.littlegit.server.model.i18n.LocalizableString
 import java.time.OffsetDateTime
 

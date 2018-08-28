@@ -45,12 +45,27 @@ object CleanupHelper {
         """, Integer::class.java, params = mapOf("name" to repoName))
 
         RepositoryHelper.dbConnector.executeDelete("""
-
             DELETE FROM Repos WHERE repoName=:repoName
-
         """, mapOf("repoName" to repoName))
 
-        ids?.forEach { RepositoryHelper.repoRepository.invalidateCache(it.toInt()) }
+        ids?.forEach {
+            RepositoryHelper.repoRepository.invalidateCache(it.toInt())
+        }
+    }
 
+    fun cleanupRepoAccess(userId: UserId, repoName: String) {
+        val ids = RepositoryHelper.dbConnector.executeScalar("""
+            SELECT id FROM Repos WHERE repoName=:name
+        """, Integer::class.java, params = mapOf("name" to repoName))
+
+
+        ids?.forEach {
+            RepositoryHelper.dbConnector.executeDelete("""
+                DELETE FROM RepoAccess WHERE userId=:userId
+                AND repoId = :repoId
+            """, mapOf("userId" to userId, "repoId" to it.toInt()))
+
+            RepositoryHelper.repoAccessRepository.invalidateCache(userId, it.toInt())
+        }
     }
 }
