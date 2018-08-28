@@ -56,7 +56,7 @@ open class UserRepository @Inject constructor (private val dbCon: DatabaseConnec
         }
     }
 
-    fun getUser(id: Int): User? {
+    fun getUser(id: UserId): User? {
         return getFullUser(id)?.toUser()
     }
 

@@ -13,5 +13,8 @@ enum class LocalizableString(val key: String) {
     FirstNameTooLong("first_name_too_long"),
     InvalidLanguageCode("invalid_language_code"),
     Response500Body("5xx_error"),
-    EmailInUse("email_in_use")
+    EmailInUse("email_in_use"),
+    RepoNameBlank("repo_name_blank"),
+    RepoNameTooLong("repo_name_too_long"),
+    DescriptionTooLong("description_too_long")
 }

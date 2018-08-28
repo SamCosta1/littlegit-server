@@ -64,7 +64,7 @@ class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
         }
 
         if (SettingsProvider.isDebugMode) {
-            val notes = errorResponse.notes?.toMutableList() ?: mutableListOf()
+            val notes = errorResponse.notes.toMutableList()
 
             val sw = StringWriter()
             throwable?.printStackTrace(PrintWriter(sw))
