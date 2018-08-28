@@ -1,13 +1,11 @@
 package com.littlegit.server.serializatoin
 
-import com.littlegit.server.model.InvalidModelException
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import org.sql2o.converters.Converter
 import sun.plugin.dom.exception.InvalidStateException
 import java.sql.Timestamp
 import java.time.OffsetDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*

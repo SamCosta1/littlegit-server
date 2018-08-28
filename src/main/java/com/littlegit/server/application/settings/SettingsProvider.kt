@@ -7,6 +7,7 @@ import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.inject.Singleton
 import java.io.File
+import java.io.Reader
 import java.util.*
 
 
@@ -52,7 +53,7 @@ class SettingsProvider @Inject constructor(private val moshi: Moshi) {
 
     private fun getDebugSettings(): String? {
         val reader = LittleGitSettings::class.java.getResourceAsStream("/settings.json")
-        return BufferedReader(InputStreamReader(reader)).lines().collect(Collectors.joining("\n"))
+        return BufferedReader(InputStreamReader(reader) as Reader?).lines().collect(Collectors.joining("\n"))
     }
 
     private fun getSettingsJson(): String? {

@@ -38,4 +38,19 @@ object CleanupHelper {
             RepositoryHelper.authRepository.invalidateCache(it)
         }
     }
+
+    fun cleanupRepo(repoName: String) {
+        val ids = RepositoryHelper.dbConnector.executeScalar("""
+            SELECT id FROM Repos WHERE repoName=:name
+        """, Integer::class.java, params = mapOf("name" to repoName))
+
+        RepositoryHelper.dbConnector.executeDelete("""
+
+            DELETE FROM Repos WHERE repoName=:repoName
+
+        """, mapOf("repoName" to repoName))
+
+        ids?.forEach { RepositoryHelper.repoRepository.invalidateCache(it.toInt()) }
+
+    }
 }

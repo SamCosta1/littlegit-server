@@ -49,7 +49,7 @@ class UserRepoTests {
 
             // Check exists in db
             RepositoryHelper.cache.delete(cacheKey)
-            val createdUser = RepositoryHelper.userRepository.getFullUser(id!!)
+            val createdUser = RepositoryHelper.userRepository.getFullUser(id)
 
             // Check all the values are as expected
             assertSignupModel(signupModel, createdUser)
