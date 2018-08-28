@@ -18,6 +18,7 @@ public class MoshiModule {
                     .add(new AuthRoleAdapter())
                     .add(new TokenTypeAdapter())
                     .add(new OffsetDateTimeAdapter())
+                    .add(new LocalizableStringAdapter())
                     .build();
         }
 

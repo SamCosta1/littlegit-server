@@ -2,15 +2,16 @@ package com.littlegit.server.model.user
 
 import com.littlegit.server.model.Validatable
 import com.littlegit.server.model.ValidatableResult
+import com.littlegit.server.model.i18n.LocalizableString
 import com.littlegit.server.util.ValidationUtils
 
 data class LoginModel(val email: String, val password: String) : Validatable {
 
     override fun validate(): ValidatableResult {
-        val messages = mutableListOf<String>()
+        val messages = mutableListOf<LocalizableString>()
 
-        if (!ValidationUtils.validateEmail(email))       { messages.add("Invalid email") }
-        if (!ValidationUtils.validatePassword(password)) { messages.add("Invalid password") }
+        if (!ValidationUtils.validateEmail(email))       { messages.add(LocalizableString.InvalidEmail) }
+        if (!ValidationUtils.validatePassword(password)) { messages.add(LocalizableString.InvalidPassword) }
 
         return ValidatableResult(messages.isEmpty(), messages)
     }

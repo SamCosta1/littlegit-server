@@ -1,6 +1,8 @@
 package com.littlegit.server.model
 
-data class ValidatableResult(val isValid: Boolean, val invalidMessages: List<String>) {
+import com.littlegit.server.model.i18n.LocalizableString
+
+data class ValidatableResult(val isValid: Boolean, val invalidMessages: List<LocalizableString>) {
     val isNotValid: Boolean; get() = !isValid
 }
 
