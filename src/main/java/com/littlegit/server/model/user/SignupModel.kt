@@ -2,6 +2,7 @@ package com.littlegit.server.model.user
 
 import com.littlegit.server.model.Validatable
 import com.littlegit.server.model.ValidatableResult
+import com.littlegit.server.model.i18n.LocalizableString
 import com.littlegit.server.util.ValidationUtils
 
 class SignupModel(val email: String,
@@ -11,17 +12,17 @@ class SignupModel(val email: String,
                        val languageCode: String): Validatable {
 
     override fun validate(): ValidatableResult {
-        val invalidMessages = mutableListOf<String>()
+        val invalidMessages = mutableListOf<LocalizableString>()
 
-        if (!ValidationUtils.validateEmail(email))       { invalidMessages.add("Email invalid")    }
-        if (!ValidationUtils.validatePassword(password)) { invalidMessages.add("Password invalid") }
-        if (firstName.isBlank())    { invalidMessages.add("First name cannot be empty") }
-        if (surname.isBlank())      { invalidMessages.add("Surname cannot be empty")    }
-        if (languageCode.isBlank()) { invalidMessages.add("language code cannot be empty")    }
+        if (!ValidationUtils.validateEmail(email))       { invalidMessages.add(LocalizableString.InvalidEmail)    }
+        if (!ValidationUtils.validatePassword(password)) { invalidMessages.add(LocalizableString.InvalidPassword) }
+        if (firstName.isBlank())    { invalidMessages.add(LocalizableString.FirstNameBlank) }
+        if (surname.isBlank())      { invalidMessages.add(LocalizableString.SurnameBlank)    }
+        if (languageCode.isBlank()) { invalidMessages.add(LocalizableString.LanguageCodeBlank)    }
 
-        if (surname.length > 50)        { invalidMessages.add("surname too long") }
-        if (firstName.length > 50)      { invalidMessages.add("First name too long") }
-        if (languageCode.length > 20)   { invalidMessages.add("Invalid language code") }
+        if (surname.length > 50)        { invalidMessages.add(LocalizableString.SurnameTooLong) }
+        if (firstName.length > 50)      { invalidMessages.add(LocalizableString.FirstNameTooLong) }
+        if (languageCode.length > 20)   { invalidMessages.add(LocalizableString.InvalidLanguageCode) }
 
         return ValidatableResult(invalidMessages.isEmpty(), invalidMessages)
     }

@@ -2,6 +2,7 @@ package com.littlegit.server.application.exception
 
 import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.model.InvalidModelException
+import com.littlegit.server.model.i18n.LocalizableString
 import com.squareup.moshi.JsonDataException
 import java.lang.IllegalArgumentException
 import javax.ws.rs.core.MediaType
@@ -14,43 +15,51 @@ import java.io.StringWriter
 @Provider
 class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
 
-    data class ErrorResponse(val rawMessage: String, val localisedMessage: String, var notes: List<String>? = null)
+    data class ErrorResponse(val rawMessage: String, val localisedMessage: List<LocalizableString>, var notes: List<String> = emptyList()) {
+
+        constructor(rawMessage: String, localisedMessage: LocalizableString? = null, notes: String? =  null)
+                :
+                this(rawMessage,
+                     if (localisedMessage == null) emptyList() else listOf(localisedMessage),
+                     if (notes == null) emptyList() else listOf(notes)
+                )
+    }
 
     override fun toResponse(throwable: Throwable?): Response {
 
         var status = 500
-        var errorResponse = ErrorResponse("Server dead", "Something went wrong")
+        var errorResponse = ErrorResponse("Server dead", LocalizableString.Response500Body)
 
         when (throwable) {
             is UserForbiddenException -> {
                 status = 403
-                errorResponse = ErrorResponse("Forbidden", "")
+                errorResponse = ErrorResponse("Forbidden")
             }
             is NotFoundException -> {
                 status = 404
-                errorResponse = ErrorResponse("Not found", "")
+                errorResponse = ErrorResponse("Not found")
             }
             is UserUnauthorizedException,
             is InvalidTokenException -> {
                 status = 401
-                errorResponse = ErrorResponse("Unauthorized", "")
+                errorResponse = ErrorResponse("Unauthorized")
             }
             is IllegalArgumentException,
             is JsonDataException -> {
                 status = 400
-                errorResponse = ErrorResponse("Bad Request", "")
+                errorResponse = ErrorResponse("Bad Request")
             }
             is NoSuchEnumValueException -> {
                 status = 400
-                errorResponse = ErrorResponse("Bad Request", "", listOf("AuthRole ${throwable.code} doesn't exist"))
+                errorResponse = ErrorResponse("Bad Request", notes = "Enum value ${throwable.code} doesn't exist")
             }
             is InvalidModelException -> {
                 status = 400
-                errorResponse = ErrorResponse("Bad Request", "", throwable.result.invalidMessages)
+                errorResponse = ErrorResponse("Bad Request", throwable.result.invalidMessages)
             }
             is EmailInUseException -> {
                 status = 400
-                errorResponse = ErrorResponse("Bad Request", "", listOf("${throwable.email} already in use"))
+                errorResponse = ErrorResponse("Bad Request", LocalizableString.EmailInUse, "${throwable.email} already in use")
             }
         }
 
