@@ -4,6 +4,7 @@ import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.db.Cache
 import com.littlegit.server.db.DatabaseConnector
 import com.littlegit.server.repo.AuthRepository
+import com.littlegit.server.repo.RepoAccessRepository
 import com.littlegit.server.repo.RepoRepository
 import com.littlegit.server.serializatoin.MoshiModule
 import com.littlegit.server.repo.UserRepository
@@ -27,4 +28,5 @@ object RepositoryHelper {
     val userRepository = UserRepository(dbConnector, cache)
     val authRepository = AuthRepository(dbConnector, cache, tokenGenerator)
     val repoRepository = RepoRepository(dbConnector, cache)
+    val repoAccessRepository = RepoAccessRepository(dbConnector, cache)
 }

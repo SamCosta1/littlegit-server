@@ -1,6 +1,7 @@
 package com.littlegit.server.model
 
 import com.littlegit.server.model.i18n.LocalizableString
+import com.littlegit.server.model.user.AuthRole
 import java.time.OffsetDateTime
 
 typealias RepoId = Int
