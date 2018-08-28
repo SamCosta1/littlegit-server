@@ -2,11 +2,10 @@ package com.littlegit.server.repo
 
 import com.littlegit.server.db.Cache
 import com.littlegit.server.db.DatabaseConnector
-import com.littlegit.server.model.CreateRepoModel
+import com.littlegit.server.model.repo.CreateRepoModel
 import com.littlegit.server.model.InvalidModelException
-import com.littlegit.server.model.Repo
-import com.littlegit.server.model.RepoId
-import com.littlegit.server.model.user.FullUser
+import com.littlegit.server.model.repo.Repo
+import com.littlegit.server.model.repo.RepoId
 import com.littlegit.server.model.user.User
 import com.littlegit.server.util.inject
 import java.time.OffsetDateTime

@@ -1,6 +1,5 @@
-package com.littlegit.server.model.repoAccess
+package com.littlegit.server.model.repo
 
-import com.littlegit.server.model.RepoId
 import com.littlegit.server.model.user.UserId
 
 data class RepoAccess(val userId: UserId, val repoId: RepoId, val active: Boolean, val level: RepoAccessLevel)

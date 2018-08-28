@@ -2,9 +2,9 @@ package com.littlegit.server.repo
 
 import com.littlegit.server.db.Cache
 import com.littlegit.server.db.DatabaseConnector
-import com.littlegit.server.model.RepoId
-import com.littlegit.server.model.repoAccess.RepoAccess
-import com.littlegit.server.model.repoAccess.RepoAccessLevel
+import com.littlegit.server.model.repo.RepoId
+import com.littlegit.server.model.repo.RepoAccess
+import com.littlegit.server.model.repo.RepoAccessLevel
 import com.littlegit.server.model.user.User
 import com.littlegit.server.model.user.UserId
 import com.littlegit.server.util.inject
@@ -22,7 +22,7 @@ class RepoAccessRepository @Inject constructor (private val dbCon: DatabaseConne
     private fun upsertRepoAccess(user: User, repoId: RepoId, level: RepoAccessLevel, hasAccess: Boolean) {
 
         dbCon.executeInsert("""
-            INSERT INTO books
+            INSERT INTO RepoAccess
                 (repoId, userId, active, level)
             VALUES
                 (:repoId, :userId, :active, :level)
@@ -35,6 +35,8 @@ class RepoAccessRepository @Inject constructor (private val dbCon: DatabaseConne
            "level" to level,
            "active" to hasAccess
         ))
+
+        invalidateCache(user.id, repoId)
     }
 
     fun getRepoAccessStatus(user: User, repoId: RepoId): RepoAccess? {

@@ -1,8 +1,8 @@
 package com.littlegit.server.repo.repo
 
-import com.littlegit.server.model.CreateRepoModel
+import com.littlegit.server.model.repo.CreateRepoModel
 import com.littlegit.server.model.InvalidModelException
-import com.littlegit.server.model.Repo
+import com.littlegit.server.model.repo.Repo
 import com.littlegit.server.model.user.User
 import com.littlegit.server.repo.RepoCacheKeys
 import com.littlegit.server.repo.testUtils.CleanupHelper

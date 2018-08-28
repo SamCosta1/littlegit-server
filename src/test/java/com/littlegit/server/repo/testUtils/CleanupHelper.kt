@@ -1,7 +1,5 @@
 package com.littlegit.server.repo.testUtils
 
-import com.littlegit.server.model.RepoId
-import com.littlegit.server.model.user.User
 import com.littlegit.server.model.user.UserId
 
 object CleanupHelper {

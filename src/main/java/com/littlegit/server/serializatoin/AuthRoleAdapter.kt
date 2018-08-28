@@ -1,7 +1,7 @@
 package com.littlegit.server.serializatoin
 
 import com.littlegit.server.application.exception.NoSuchEnumValueException
-import com.littlegit.server.model.repoAccess.RepoAccessLevel
+import com.littlegit.server.model.repo.RepoAccessLevel
 import com.littlegit.server.model.user.AuthRole
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
@@ -41,9 +41,7 @@ class AuthRoleAdapter: Converter<AuthRole> {
         }
     }
 
-
     @ToJson override fun toDatabaseParam(role: AuthRole): Any = role.code
-
 }
 
 class RepoAccessLevelAdapter: Converter<RepoAccessLevel> {
