@@ -3,15 +3,13 @@ package com.littlegit.server.db
 import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.model.auth.TokenType
 import com.littlegit.server.model.user.AuthRole
-import com.littlegit.server.serializatoin.AuthRoleAdapter
-import com.littlegit.server.serializatoin.EnumAdapters
-import com.littlegit.server.serializatoin.OffsetDateTimeAdapter
-import com.littlegit.server.serializatoin.TokenTypeAdapter
+import com.littlegit.server.serializatoin.*
 import org.sql2o.Query
 import org.sql2o.Sql2o
 import org.sql2o.converters.Converter
 import org.sql2o.quirks.NoQuirks
 import java.math.BigInteger
+import java.net.InetAddress
 import java.time.OffsetDateTime
 import javax.inject.Inject
 
@@ -102,6 +100,7 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
             OffsetDateTime::class.java to OffsetDateTimeAdapter()
         )
 
+        adapters[InetAddress::class.java] = IpAddressAdapter()
         EnumAdapters.addAllTo(adapters)
 
         return adapters
