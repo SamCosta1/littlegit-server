@@ -8,6 +8,7 @@ import com.littlegit.server.repo.UserRepository
 import com.littlegit.server.repo.testUtils.CleanupHelper
 import com.littlegit.server.repo.testUtils.RepositoryHelper
 import com.littlegit.server.repo.testUtils.UserHelper
+import com.littlegit.server.repo.testUtils.UserHelper.assertSignupModel
 import com.littlegit.server.util.HashingUtils
 import com.littlegit.server.util.inject
 import org.junit.Test
@@ -135,16 +136,5 @@ class UserRepoTests {
         } finally {
             cleaner()
         }
-    }
-
-    // Helper
-    private fun assertSignupModel(expected: SignupModel, actual: FullUser?) {
-        assertEquals(expected.email, actual?.email)
-        assertEquals(expected.firstName, actual?.firstName)
-        assertEquals(expected.surname, actual?.surname)
-        assertEquals(expected.languageCode, actual?.languageCode)
-        assertEquals(AuthRole.BasicUser, actual?.role)
-        assertNotNull(actual?.passwordHash)
-        assertNotNull(actual?.passwordSalt)
     }
 }

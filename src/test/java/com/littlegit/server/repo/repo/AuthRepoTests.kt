@@ -5,10 +5,7 @@ import com.littlegit.server.model.auth.Token
 import com.littlegit.server.model.auth.TokenType
 import com.littlegit.server.model.user.UserId
 import com.littlegit.server.repo.AuthRepository
-import com.littlegit.server.repo.testUtils.CleanupHelper
-import com.littlegit.server.repo.testUtils.RepositoryHelper
-import com.littlegit.server.repo.testUtils.UserHelper
-import com.littlegit.server.repo.testUtils.upon
+import com.littlegit.server.repo.testUtils.*
 import com.littlegit.server.util.TokenGenerator
 import com.littlegit.server.util.inject
 import org.junit.Test
@@ -177,13 +174,4 @@ class AuthRepoTests {
             cleaner()
         }
     }
-
-    private fun assertToken(userId: UserId?, expected: Token, actual: Token?) {
-        assertEquals(userId, actual?.userId)
-        assertEquals(expected.token, actual?.token)
-        assertEquals(expected.tokenType, actual?.tokenType)
-        assertTrue(expected.expiry.isEqual(actual?.expiry))
-    }
-
-
 }

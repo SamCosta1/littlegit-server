@@ -13,6 +13,7 @@ import javax.inject.Inject
 object GitServerCacheKeys {
     const val SERVER_CACHE_BY_ID = "GitServer(Id: {0})"
 }
+
 class GitServerRepository @Inject constructor (private val dbCon: DatabaseConnector,
                                                private val cache: Cache) {
 

@@ -3,11 +3,8 @@ package com.littlegit.server.repo.testUtils
 import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.db.Cache
 import com.littlegit.server.db.DatabaseConnector
-import com.littlegit.server.repo.AuthRepository
-import com.littlegit.server.repo.RepoAccessRepository
-import com.littlegit.server.repo.RepoRepository
+import com.littlegit.server.repo.*
 import com.littlegit.server.serializatoin.MoshiModule
-import com.littlegit.server.repo.UserRepository
 import com.littlegit.server.util.TokenGenerator
 
 object RepositoryHelper {
@@ -29,4 +26,5 @@ object RepositoryHelper {
     val authRepository = AuthRepository(dbConnector, cache, tokenGenerator)
     val repoRepository = RepoRepository(dbConnector, cache)
     val repoAccessRepository = RepoAccessRepository(dbConnector, cache)
+    val gitServerRepository = GitServerRepository(dbConnector, cache)
 }

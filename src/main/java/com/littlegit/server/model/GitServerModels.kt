@@ -7,12 +7,12 @@ typealias GitServerId = Int
 
 data class GitServer(val id: GitServerId,
                           override val ip: InetAddress,
-                          override val region: String,
+                          override val region: GitServerRegion,
                           override val capacity: Int)
     : CreateGitServerModel(ip, region, capacity)
 
 open class CreateGitServerModel(open val ip: InetAddress,
-                                open val region: String,
+                                open val region: GitServerRegion,
                                 open val capacity: Int): Validatable {
 
     override fun validate(): ValidatableResult {

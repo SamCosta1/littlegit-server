@@ -23,7 +23,7 @@ class RepoRepoTests {
     }
 
     @Test
-    fun testCreateValidRepo__AndGetIt_IsSuccessful() {
+    fun testCreateValidRepo_AndGetIt_IsSuccessful() {
         val repoName = "test_create_valid"
 
         val cleaner = {
