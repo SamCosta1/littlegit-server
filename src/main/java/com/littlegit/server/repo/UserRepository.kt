@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 open class UserRepository @Inject constructor (private val dbCon: DatabaseConnector,
-                                          private val cache: Cache) {
+                                               private val cache: Cache) {
 
     companion object {
         const val USER_CACHE_KEY_BY_ID = "User(Id:{0})"

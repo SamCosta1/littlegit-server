@@ -17,6 +17,7 @@ public class MoshiModule {
                     .add(new KotlinJsonAdapterFactory())
                     .add(new TokenTypeAdapter())
                     .add(new OffsetDateTimeAdapter())
+                    .add(new IpAddressAdapter())
                     .add(new LocalizableStringAdapter());
 
              EnumAdapters.addAllTo(builder);

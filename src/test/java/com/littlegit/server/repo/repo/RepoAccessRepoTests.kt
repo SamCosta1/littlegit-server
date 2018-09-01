@@ -18,16 +18,17 @@ class RepoAccessRepoTests {
     @Test
     fun testGrantRepoAccess_WhenDoesNotExist_IsSuccessful() {
         val user = UserHelper.createTestUser()
-        val repo = RepoHelper.insertTestRepo(user = user)
+        val repoName = "RepoAccess_Test"
 
         val cleaner = {
-            CleanupHelper.cleanupRepoAccess(user.id, repo.repoName)
-            CleanupHelper.cleanupRepo(repo.repoName)
+            CleanupHelper.cleanupRepoAccess(user.id, repoName)
+            CleanupHelper.cleanupRepo(repoName)
         }
 
         cleaner()
 
         try {
+            val repo = RepoHelper.insertTestRepo(repoName = repoName, user = user)
             val repoAccessLevel = RepoAccessLevel.Contributor
             val cacheKey = RepoAccessCacheKeys.REPO_ACCESS_CACHE_KEY.inject(user.id, repo.id)
             RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo.id, repoAccessLevel)
@@ -50,16 +51,17 @@ class RepoAccessRepoTests {
     @Test
     fun testGrantRepoAccess_WhenDoesExist_IsSuccessful() {
         val user = UserHelper.createTestUser()
-        val repo = RepoHelper.insertTestRepo(user = user)
+        val repoName = "RepoAccess_Test"
 
         val cleaner = {
-            CleanupHelper.cleanupRepoAccess(user.id, repo.repoName)
-            CleanupHelper.cleanupRepo(repo.repoName)
+            CleanupHelper.cleanupRepoAccess(user.id, repoName)
+            CleanupHelper.cleanupRepo(repoName)
         }
 
         cleaner()
 
         try {
+            val repo = RepoHelper.insertTestRepo(repoName = repoName, user = user)
             val repoAccessLevel = RepoAccessLevel.Contributor
             val cacheKey = RepoAccessCacheKeys.REPO_ACCESS_CACHE_KEY.inject(user.id, repo.id)
             RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo.id, repoAccessLevel)
@@ -94,16 +96,17 @@ class RepoAccessRepoTests {
     @Test
     fun testRevokeRepoAccess_WhenDoesExist_IsSuccessful() {
         val user = UserHelper.createTestUser()
-        val repo = RepoHelper.insertTestRepo(user = user)
+        val repoName = "RepoAccess_Test"
 
         val cleaner = {
-            CleanupHelper.cleanupRepoAccess(user.id, repo.repoName)
-            CleanupHelper.cleanupRepo(repo.repoName)
+            CleanupHelper.cleanupRepoAccess(user.id, repoName)
+            CleanupHelper.cleanupRepo(repoName)
         }
 
         cleaner()
 
         try {
+            val repo = RepoHelper.insertTestRepo(repoName = repoName, user = user)
             val repoAccessLevel = RepoAccessLevel.Contributor
             val cacheKey = RepoAccessCacheKeys.REPO_ACCESS_CACHE_KEY.inject(user.id, repo.id)
             RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo.id, repoAccessLevel)

@@ -16,5 +16,6 @@ enum class LocalizableString(val key: String) {
     EmailInUse("email_in_use"),
     RepoNameBlank("repo_name_blank"),
     RepoNameTooLong("repo_name_too_long"),
-    DescriptionTooLong("description_too_long")
+    DescriptionTooLong("description_too_long"),
+    InvalidCapacity("invalid_capacity")
 }
