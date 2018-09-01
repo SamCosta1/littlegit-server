@@ -13,7 +13,7 @@ class IpAddressAdapter: Converter<InetAddress> {
             return null
         }
 
-        return ip.toString()
+        return ip.hostAddress
     }
 
     override fun convert(raw: Any): InetAddress {
@@ -25,7 +25,7 @@ class IpAddressAdapter: Converter<InetAddress> {
     }
 
     @ToJson fun toJson(ip: InetAddress?): String? {
-        return ip?.toString() ?: ""
+        return ip?.hostAddress ?: ""
     }
 
     @FromJson fun fromJson(ip: String): InetAddress {

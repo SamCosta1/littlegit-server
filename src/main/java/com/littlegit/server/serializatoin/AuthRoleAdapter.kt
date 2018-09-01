@@ -2,12 +2,14 @@ package com.littlegit.server.serializatoin
 
 import com.littlegit.server.application.exception.NoSuchEnumValueException
 import com.littlegit.server.model.GitServerRegion
+import com.littlegit.server.model.auth.TokenType
 import com.littlegit.server.model.repo.RepoAccessLevel
 import com.littlegit.server.model.user.AuthRole
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import org.sql2o.converters.Converter
+import java.io.Serializable
 
 object EnumAdapters {
 
@@ -22,15 +24,18 @@ object EnumAdapters {
         else -> raw.toString()
     }
 
-    @JvmStatic fun addAllTo(adapters: MutableMap<Class<out Any>, Converter<out Any>>) {
+    @JvmStatic fun addAllTo(adapters: MutableMap<Class<out Serializable>, Converter<out Serializable>>) {
         adapters[AuthRole::class.java] = AuthRoleAdapter()
         adapters[RepoAccessLevel::class.java] = RepoAccessLevelAdapter()
         adapters[GitServerRegion::class.java] = GitServerRegionAdapter()
+        adapters[TokenType::class.java] = TokenTypeAdapter()
     }
 
     @JvmStatic fun addAllTo(builder: Moshi.Builder) {
         builder.add(AuthRoleAdapter())
         builder.add(RepoAccessLevelAdapter())
+        builder.add(GitServerRegionAdapter())
+        builder.add(TokenTypeAdapter())
     }
 }
 class AuthRoleAdapter: Converter<AuthRole> {
@@ -81,5 +86,21 @@ class GitServerRegionAdapter: Converter<GitServerRegion> {
     }
 
     @ToJson override fun toDatabaseParam(region: GitServerRegion): Any = region.code
+}
+
+class TokenTypeAdapter: Converter<TokenType> {
+
+    @FromJson override fun convert(raw: Any): TokenType? {
+        try {
+
+            val rawInt = EnumAdapters.anyToInt(raw)
+            return TokenType.fromInt(rawInt)!!
+
+        } catch (e: Exception) {
+            throw NoSuchEnumValueException(raw)
+        }
+    }
+
+    @ToJson override fun toDatabaseParam(role: TokenType) = role.code
 
 }

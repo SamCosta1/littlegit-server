@@ -8,7 +8,10 @@ import org.sql2o.Query
 import org.sql2o.Sql2o
 import org.sql2o.converters.Converter
 import org.sql2o.quirks.NoQuirks
+import java.io.Serializable
 import java.math.BigInteger
+import java.net.Inet4Address
+import java.net.Inet6Address
 import java.net.InetAddress
 import java.time.OffsetDateTime
 import javax.inject.Inject
@@ -93,16 +96,17 @@ class DatabaseConnector @Inject constructor (settingsProvider: SettingsProvider)
         return query
     }
 
-    private fun getAdapters(): Map<Class<out Any>, Converter<out Any>> {
+    private fun getAdapters(): Map<Class<Any>, Converter<Any>> {
 
         val adapters = mutableMapOf(
-            TokenType::class.java to TokenTypeAdapter(),
-            OffsetDateTime::class.java to OffsetDateTimeAdapter()
+            OffsetDateTime::class.java to OffsetDateTimeAdapter(),
+            InetAddress::class.java to IpAddressAdapter(),
+            Inet6Address::class.java to IpAddressAdapter(),
+            Inet4Address::class.java to IpAddressAdapter()
         )
 
-        adapters[InetAddress::class.java] = IpAddressAdapter()
         EnumAdapters.addAllTo(adapters)
 
-        return adapters
+        return adapters as Map<Class<Any>, Converter<Any>>
     }
 }

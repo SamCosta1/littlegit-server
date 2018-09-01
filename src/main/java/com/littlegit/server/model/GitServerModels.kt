@@ -6,14 +6,13 @@ import java.net.InetAddress
 typealias GitServerId = Int
 
 data class GitServer(val id: GitServerId,
-                          override val ip: InetAddress,
-                          override val region: GitServerRegion,
-                          override val capacity: Int)
-    : CreateGitServerModel(ip, region, capacity)
+                     val ip: InetAddress,
+                     val region: GitServerRegion,
+                     val capacity: Int)
 
-open class CreateGitServerModel(open val ip: InetAddress,
-                                open val region: GitServerRegion,
-                                open val capacity: Int): Validatable {
+open class CreateGitServerModel( val ip: InetAddress,
+                                 val region: GitServerRegion,
+                                 val capacity: Int): Validatable {
 
     override fun validate(): ValidatableResult {
         val invalidMessages = mutableListOf<LocalizableString>()
