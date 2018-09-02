@@ -58,6 +58,33 @@ class RepoRepoTests {
         }
     }
 
+    @Test
+    fun testGetRepo_ByUserAndName_IsSuccessful() {
+        val repoName = "test_create_valid"
+
+        val cleaner = {
+            CleanupHelper.cleanupRepo(repoName)
+        }
+
+        cleaner()
+        val testUser = UserHelper.createTestUser()
+        val cloneUrl = "clone_url"
+        val serverId = 1
+        val createRepoModel = CreateRepoModel(repoName, "description")
+
+        try {
+            val id = RepositoryHelper.repoRepository.createRepo(createRepoModel, testUser, cloneUrl, serverId)
+            assertNotNull(id)
+
+            val retrievedRepo = RepositoryHelper.repoRepository.getRepoByNameAndCreator(testUser, repoName)
+
+            // Check all the values are as expected
+            assertRepo(createRepoModel, testUser, cloneUrl, serverId, retrievedRepo)
+
+        } finally {
+            cleaner()
+        }
+    }
 
     // Helper
     private fun assertRepo(expected: CreateRepoModel, expectedUser: User, expectedCloneUrl: String, expectedServerId: Int, actual: Repo?) {

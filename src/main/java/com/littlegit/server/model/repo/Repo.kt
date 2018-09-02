@@ -20,7 +20,7 @@ data class Repo(val id: RepoId,
 
 data class RepoSummary(val id: RepoId, val repoName: String, val createdDate: OffsetDateTime, val description: String, val cloneUrlPath: CloneUrlPath)
 
-data class CreateRepoModel(val repoName: String, val description: String): Validatable {
+data class CreateRepoModel(val repoName: String, val description: String = ""): Validatable {
 
     override fun validate(): ValidatableResult {
 
