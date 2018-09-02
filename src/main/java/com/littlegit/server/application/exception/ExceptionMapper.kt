@@ -61,6 +61,10 @@ class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
                 status = 400
                 errorResponse = ErrorResponse("Bad Request", LocalizableString.EmailInUse, "${throwable.email} already in use")
             }
+            is DuplicateRecordException -> {
+                status = 400
+                errorResponse = ErrorResponse("Bad Request", LocalizableString.ValueAlreadyExists, throwable.clazz.simpleName)
+            }
         }
 
         if (SettingsProvider.isDebugMode) {

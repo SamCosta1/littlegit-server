@@ -8,6 +8,7 @@ import com.littlegit.server.model.repo.Repo
 import com.littlegit.server.model.repo.RepoId
 import com.littlegit.server.model.user.User
 import com.littlegit.server.util.inject
+import com.littlegit.server.util.stripWhiteSpace
 import java.time.OffsetDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,7 +39,7 @@ class RepoRepository @Inject constructor (private val dbCon: DatabaseConnector,
             )
             VALUES (:repoName, :createdDate, :creatorId, :description, :serverId, :cloneUrlPath);
         """, params = mapOf(
-            "repoName" to createModel.repoName,
+            "repoName" to createModel.repoName.stripWhiteSpace(),
             "createdDate" to OffsetDateTime.now(),
             "creatorId" to user.id,
             "description" to createModel.description,
@@ -68,4 +69,12 @@ class RepoRepository @Inject constructor (private val dbCon: DatabaseConnector,
     fun getRepoSummary(id: RepoId) = getRepo(id)?.toRepoSummary()
 
     fun invalidateCache(id: RepoId) = cache.delete(RepoCacheKeys.REPO_CACHE_KEY_BY_ID.inject(id))
+
+    fun getRepoByNameAndCreator(user: User, repoName: String): Repo? {
+        return dbCon.executeSelect("""
+            SELECT * FROM Repos
+            WHERE creatorId=:creatorId
+            AND   repoName=:repoName
+        """, Repo::class.java, params = mapOf("repoName" to repoName.stripWhiteSpace(), "creatorId" to user.id))?.firstOrNull()
+    }
 }

@@ -24,4 +24,6 @@ class UserForbiddenException: RuntimeException()
 
 class ProgrammerError: RuntimeException()
 
-class LittleGitCommandFailedException(err: GitError): Throwable()
+data class LittleGitCommandFailedException(val err: GitError): Throwable()
+
+data class DuplicateRecordException(val clazz: Class<*>): Throwable()

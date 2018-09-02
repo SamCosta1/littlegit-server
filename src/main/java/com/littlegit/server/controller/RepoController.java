@@ -3,6 +3,7 @@ package com.littlegit.server.controller;
 import com.littlegit.server.authfilter.Secured;
 import com.littlegit.server.model.repo.CreateRepoModel;
 import com.littlegit.server.model.repo.Repo;
+import com.littlegit.server.model.repo.RepoSummary;
 import com.littlegit.server.model.user.AuthRole;
 import com.littlegit.server.model.user.User;
 import com.littlegit.server.service.RepoService;
@@ -29,8 +30,8 @@ public class RepoController {
     @POST
     @Path("/create")
     @Secured({ AuthRole.Admin, AuthRole.OrganizationAdmin, AuthRole.BasicUser})
-    public Repo createRepo(CreateRepoModel createModel,
-                           @Context SecurityContext context) {
+    public RepoSummary createRepo(CreateRepoModel createModel,
+                                  @Context SecurityContext context) {
 
         return repoService.createRepo(CastingUtilsKt.asUser(context.getUserPrincipal()), createModel);
     }
