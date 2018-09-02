@@ -72,7 +72,7 @@ class AuthServiceTests {
         val duration = 10
 
         val tokensConfig = TokensConfig(duration, duration)
-        upon(settingsProviderMock.settings).thenReturn(LittleGitSettings(mock(DbConfig::class.java), mock(RedisConfig::class.java), tokensConfig, true))
+        upon(settingsProviderMock.settings).thenReturn(LittleGitSettings(mock(DbConfig::class.java), mock(RedisConfig::class.java), tokensConfig, true, mock(GitServerConfig::class.java)))
         upon(authRepoMock.getFullToken(token)).thenReturn(Token(userId, token, TokenType.RefreshToken, OffsetDateTime.now()))
         upon(authRepoMock.createAndSaveAccessToken(userId)).thenReturn(Token(userId, newRawToken, TokenType.AccessToken, OffsetDateTime.now()))
 

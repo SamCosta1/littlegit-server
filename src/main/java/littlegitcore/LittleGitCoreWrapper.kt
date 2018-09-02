@@ -3,15 +3,13 @@ package littlegitcore
 import com.littlegit.server.application.exception.LittleGitCommandFailedException
 import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.model.GitServer
-import com.littlegit.server.model.repo.CloneUrlPath
 import com.littlegit.server.model.repo.CreateRepoModel
-import com.littlegit.server.model.user.User
 import org.littlegit.core.LittleGitCore
 import org.littlegit.core.commandrunner.GitResult
 import java.nio.file.Path
 import javax.inject.Inject
 
-class LittleGitCoreWrapper @Inject constructor(private val settingsProvider: SettingsProvider): {
+class LittleGitCoreWrapper @Inject constructor(private val settingsProvider: SettingsProvider) {
 
     fun initRepo(repo: CreateRepoModel, server: GitServer): Path {
 
