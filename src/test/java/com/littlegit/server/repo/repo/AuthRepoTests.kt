@@ -58,7 +58,13 @@ class AuthRepoTests {
 
         val tokensConfig = TokensConfig(tokenDuration, tokenDuration)
         val settingsProvider = mock(SettingsProvider::class.java)
-        upon(settingsProvider.settings).thenReturn(LittleGitSettings(mock(DbConfig::class.java), mock(RedisConfig::class.java), tokensConfig, true))
+        upon(settingsProvider.settings)
+                .thenReturn(LittleGitSettings(mock(DbConfig::class.java),
+                        mock(RedisConfig::class.java),
+                        tokensConfig,
+                        true,
+                        mock(GitServerConfig::class.java)))
+
         val authRepo = AuthRepository(RepositoryHelper.dbConnector, RepositoryHelper.cache, TokenGenerator(settingsProvider))
 
         try {

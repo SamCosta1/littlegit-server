@@ -31,3 +31,5 @@ object StringUtils {
 }
 
 fun String.inject(vararg params: Any) = MessageFormat.format(this, *params)!!
+
+fun String.stripWhiteSpace() = this.replace("\\s".toRegex(), "")

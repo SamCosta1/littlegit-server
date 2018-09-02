@@ -6,20 +6,21 @@ import com.littlegit.server.model.i18n.LocalizableString
 import java.time.OffsetDateTime
 
 typealias RepoId = Int
+typealias CloneUrlPath = String
 data class Repo(val id: RepoId,
                 val repoName: String,
                 val createdDate: OffsetDateTime,
                 val creatorId: Int,
                 val description:   String,
                 val serverId: Int,
-                val cloneUrlPath: String) {
+                val cloneUrlPath: CloneUrlPath) {
 
     fun toRepoSummary(): RepoSummary = RepoSummary(id, repoName, createdDate, description, cloneUrlPath)
 }
 
-data class RepoSummary(val id: RepoId, val repoName: String, val createdDate: OffsetDateTime, val description: String, val cloneUrlPath: String)
+data class RepoSummary(val id: RepoId, val repoName: String, val createdDate: OffsetDateTime, val description: String, val cloneUrlPath: CloneUrlPath)
 
-data class CreateRepoModel(val repoName: String, val description: String): Validatable {
+data class CreateRepoModel(val repoName: String, val description: String = ""): Validatable {
 
     override fun validate(): ValidatableResult {
 

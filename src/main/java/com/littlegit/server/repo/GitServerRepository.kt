@@ -7,6 +7,7 @@ import com.littlegit.server.model.GitServer
 import com.littlegit.server.model.GitServerId
 import com.littlegit.server.model.InvalidModelException
 import com.littlegit.server.model.repo.Repo
+import com.littlegit.server.model.user.User
 import com.littlegit.server.util.inject
 import javax.inject.Inject
 
@@ -50,6 +51,12 @@ class GitServerRepository @Inject constructor (private val dbCon: DatabaseConnec
 
             gitServers?.firstOrNull()
         }
+    }
+
+    // TODO: Make this take into account the number of repos on each server, the user's region etc etc etc
+    // For now since there's only one server, just return it
+    fun getBestGitServerForUser(user: User): GitServer? {
+        return getGitServer(1)
     }
 
     fun invalidateCache(id: GitServerId) = cache.delete(GitServerCacheKeys.SERVER_CACHE_BY_ID.inject(id))

@@ -1,13 +1,13 @@
 package com.littlegit.server.application.exception
 
 import com.littlegit.server.model.user.User
+import org.littlegit.core.model.GitError
 import java.lang.RuntimeException
 import kotlin.reflect.KClass
 
 data class EmailInUseException(val email: String) : Throwable()
 
 data class NoSuchEnumValueException(val code: Any) : Exception()
-
 
 class UserUnauthorizedException(private val msg: String = ""): RuntimeException() {
 
@@ -23,3 +23,7 @@ data class NotFoundException(val type: KClass<*>): RuntimeException()
 class UserForbiddenException: RuntimeException()
 
 class ProgrammerError: RuntimeException()
+
+data class LittleGitCommandFailedException(val err: GitError): Throwable()
+
+data class DuplicateRecordException(val clazz: Class<*>): Throwable()

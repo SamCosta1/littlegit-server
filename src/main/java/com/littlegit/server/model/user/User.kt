@@ -10,7 +10,8 @@ class FullUser(id: UserId,
                val passwordHash: String,
                val passwordSalt: String,
                role: AuthRole,
-               languageCode: String): User(id, email, firstName, surname, role, languageCode) {
+               languageCode: String,
+               username: String): User(id, email, firstName, surname, role, languageCode, username) {
 
     fun toUser(): User {
         return super.clone()
@@ -22,12 +23,13 @@ open class User(val id: UserId,
                 val firstName: String,
                 val surname: String,
                 val role: AuthRole,
-                val languageCode: String): Principal {
+                val languageCode: String,
+                val username: String): Principal {
 
     override fun getName(): String = "$firstName $surname"
 
     fun clone(): User {
-        return User(id, email, firstName, surname, role, languageCode)
+        return User(id, email, firstName, surname, role, languageCode, username)
     }
 
     fun hasAnyRoleOf(allowedRoles: List<AuthRole>): Boolean {
@@ -41,7 +43,8 @@ class CreateUserModel(val email: String,
                       val passwordHash: String,
                       val passwordSalt: String,
                       val role: AuthRole,
-                      val languageCode: String) {
+                      val languageCode: String,
+                      val username: String) {
 
     companion object {
         fun fromSignupModel(signupModel: SignupModel, salt: String, passwordHash: String): CreateUserModel {
@@ -52,7 +55,8 @@ class CreateUserModel(val email: String,
                     passwordHash,
                     salt,
                     AuthRole.BasicUser,
-                    signupModel.languageCode
+                    signupModel.languageCode,
+                    signupModel.username
             )
         }
     }

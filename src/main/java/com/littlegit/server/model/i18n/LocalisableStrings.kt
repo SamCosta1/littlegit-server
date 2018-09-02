@@ -17,5 +17,8 @@ enum class LocalizableString(val key: String) {
     RepoNameBlank("repo_name_blank"),
     RepoNameTooLong("repo_name_too_long"),
     DescriptionTooLong("description_too_long"),
-    InvalidCapacity("invalid_capacity")
+    InvalidCapacity("invalid_capacity"),
+    UsernameBlank("blank_username"),
+    InvalidUsername("invalid_username"),
+    ValueAlreadyExists("value_already_exists")
 }

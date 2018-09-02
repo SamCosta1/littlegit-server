@@ -79,9 +79,10 @@ open class UserRepository @Inject constructor (private val dbCon: DatabaseConnec
                 passwordHash,
                 passwordSalt,
                 role,
-                languageCode
+                languageCode,
+                username
             )
-            VALUES (:firstName, :surname, :email, :passwordHash, :passwordSalt, :role, :languageCode);
+            VALUES (:firstName, :surname, :email, :passwordHash, :passwordSalt, :role, :languageCode, :username);
         """, model = user)
     }
 

@@ -18,7 +18,20 @@
         <kotlin.version>1.2.50</kotlin.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>myMavenRepo.read</id>
+            <url>https://mymavenrepo.com/repo/fgpmG1RhV5dDf0vvHkBf/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>org.littlegit.core</groupId>
+            <artifactId>littlegit-core</artifactId>
+            <version>0.1.0</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>

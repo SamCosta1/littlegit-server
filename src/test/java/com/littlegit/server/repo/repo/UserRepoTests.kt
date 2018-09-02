@@ -39,7 +39,8 @@ class UserRepoTests {
                 "password",
                 "TestCreateValidUser_FirstName",
                 "TestCreateValidUser_Surname",
-                "en-GB")
+                "en-GB",
+                "TestCVU_Username")
 
         try {
             val id = RepositoryHelper.userRepository.createUser(signupModel)
@@ -79,7 +80,8 @@ class UserRepoTests {
                 "password",
                 "TestCreateValidUser_FirstName",
                 "TestCreateValidUser_Surname",
-                "en-GB")
+                "en-GB",
+                "TestCVU_Username")
 
         try {
             val id = RepositoryHelper.userRepository.createUser(signupModel)!!
@@ -115,7 +117,8 @@ class UserRepoTests {
                 "password",
                 "TestCreateValidUser_FirstName",
                 "TestCreateValidUser_Surname",
-                "en-GB")
+                "en-GB",
+                "TestCVU_Username")
 
         try {
             val id = RepositoryHelper.userRepository.createUser(signupModel)!!
