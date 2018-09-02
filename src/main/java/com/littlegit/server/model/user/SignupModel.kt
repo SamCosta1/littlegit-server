@@ -9,7 +9,8 @@ class SignupModel(val email: String,
                        val password: String,
                        val firstName: String,
                        val surname: String,
-                       val languageCode: String): Validatable {
+                       val languageCode: String,
+                       val username: String): Validatable {
 
     override fun validate(): ValidatableResult {
         val invalidMessages = mutableListOf<LocalizableString>()
@@ -19,10 +20,12 @@ class SignupModel(val email: String,
         if (firstName.isBlank())    { invalidMessages.add(LocalizableString.FirstNameBlank) }
         if (surname.isBlank())      { invalidMessages.add(LocalizableString.SurnameBlank)    }
         if (languageCode.isBlank()) { invalidMessages.add(LocalizableString.LanguageCodeBlank)    }
+        if (username.isBlank())     { invalidMessages.add(LocalizableString.UsernameBlank)    }
 
         if (surname.length > 50)        { invalidMessages.add(LocalizableString.SurnameTooLong) }
         if (firstName.length > 50)      { invalidMessages.add(LocalizableString.FirstNameTooLong) }
         if (languageCode.length > 20)   { invalidMessages.add(LocalizableString.InvalidLanguageCode) }
+        if (username.length > 20)       { invalidMessages.add(LocalizableString.InvalidUsername) }
 
         return ValidatableResult(invalidMessages.isEmpty(), invalidMessages)
     }

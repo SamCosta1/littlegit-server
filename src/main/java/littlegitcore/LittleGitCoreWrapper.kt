@@ -23,7 +23,6 @@ class LittleGitCoreWrapper @Inject constructor(private val settingsProvider: Set
         }
 
         return settingsProvider.settings.gitServer.reposPath.resolve(repo.repoName).normalize()
-
     }
 
     private fun buildLittleGitCore(server: GitServer): LittleGitCore =
