@@ -14,5 +14,9 @@
        "accessTokenDuration": 3600,
        "refreshTokenDuration": 700000
    },
-   "isDebug": true
+   "isDebug": true,
+   "gitServer": {
+      "sshUser": "root",
+      "reposDirectory": "/"
+   }
 }
