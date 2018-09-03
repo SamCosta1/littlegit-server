@@ -67,12 +67,12 @@ class RepoServiceTests {
         val createModel = CreateRepoModel(repoName)
         val server = GitServerHelper.createGitServer()
         val repoId = 1
-        val cloneUrlPath = "${user.username}/$repoName"
+        val cloneUrlPath = "git@ipaddress:/${user.username}/$repoName"
 
         upon(gitServerRepository.getBestGitServerForUser(user)).thenReturn(server)
         upon(repoRepoMock.getRepoByNameAndCreator(user, repoName)).thenReturn(null)
         upon(repoRepoMock.createRepo(createModel, user, cloneUrlPath, server.id)).thenReturn(repoId)
-        upon(littleGitCoreWrapper.initRepo(user, createModel, server)).thenReturn(Paths.get(cloneUrlPath))
+        upon(littleGitCoreWrapper.initRepo(user, createModel, server)).thenReturn(cloneUrlPath)
 
         repoService.createRepo(user, createModel)
 
@@ -87,12 +87,12 @@ class RepoServiceTests {
         val createModel = CreateRepoModel(repoName)
         val server = GitServerHelper.createGitServer()
         val repoId = 1
-        val cloneUrlPath = "${user.username}/$repoName"
+        val cloneUrlPath = "git@ipaddress:/${user.username}/$repoName"
 
         upon(gitServerRepository.getBestGitServerForUser(user)).thenReturn(server)
         upon(repoRepoMock.getRepoByNameAndCreator(user, repoName)).thenReturn(null)
         upon(repoRepoMock.createRepo(createModel, user, cloneUrlPath, server.id)).thenReturn(repoId)
-        upon(littleGitCoreWrapper.initRepo(user, createModel, server)).thenReturn(Paths.get(cloneUrlPath))
+        upon(littleGitCoreWrapper.initRepo(user, createModel, server)).thenReturn(cloneUrlPath)
 
         repoService.createRepo(user, createModel)
 
@@ -112,7 +112,7 @@ class RepoServiceTests {
         upon(gitServerRepository.getBestGitServerForUser(user)).thenReturn(server)
         upon(repoRepoMock.getRepoByNameAndCreator(user, repoName)).thenReturn(null)
         upon(repoRepoMock.createRepo(createModel, user, cloneUrlPath, server.id)).thenReturn(repoId)
-        upon(littleGitCoreWrapper.initRepo(user, createModel, server)).thenReturn(Paths.get(cloneUrlPath))
+        upon(littleGitCoreWrapper.initRepo(user, createModel, server)).thenReturn(cloneUrlPath)
 
         repoService.createRepo(user, createModel)
 

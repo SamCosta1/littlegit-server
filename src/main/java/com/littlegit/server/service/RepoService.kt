@@ -33,7 +33,7 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
         val clonePath = littleGitCoreWrapper.initRepo(user, createRepoModel, server)
 
         // Create a record for the repo in the db
-        val repoId = repoRepository.createRepo(createRepoModel, user, clonePath.toString(), server.id)
+        val repoId = repoRepository.createRepo(createRepoModel, user, clonePath, server.id)
 
         // Give this user access to it
         val repoAccessLevel = when(user.role) {

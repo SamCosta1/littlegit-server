@@ -17,6 +17,7 @@
    "isDebug": true,
    "gitServer": {
       "sshUser": "root",
-      "reposDirectory": "/"
+      "reposDirectory": "/Git",
+       "gitUser": "git"
    }
 }
