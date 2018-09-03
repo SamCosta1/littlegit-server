@@ -27,4 +27,5 @@ object RepositoryHelper {
     val repoRepository = RepoRepository(dbConnector, cache)
     val repoAccessRepository = RepoAccessRepository(dbConnector, cache)
     val gitServerRepository = GitServerRepository(dbConnector, cache)
+    val sshKeyRepository = SshKeyRepository(dbConnector, cache)
 }

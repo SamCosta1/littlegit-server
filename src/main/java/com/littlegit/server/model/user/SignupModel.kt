@@ -27,7 +27,7 @@ class SignupModel(val email: String,
         if (languageCode.length > 20)   { invalidMessages.add(LocalizableString.InvalidLanguageCode) }
         if (username.length > 20)       { invalidMessages.add(LocalizableString.InvalidUsername) }
 
-        return ValidatableResult(invalidMessages.isEmpty(), invalidMessages)
+        return ValidatableResult(invalidMessages)
     }
 
 }

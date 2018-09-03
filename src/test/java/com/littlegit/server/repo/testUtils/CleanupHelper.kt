@@ -81,4 +81,10 @@ object CleanupHelper {
             SELECT id FROM $table WHERE $whereClause
         """, Integer::class.java, params = params) ?: emptyList()
     }
+
+    fun cleanupSshKey(publicKey: String) {
+        RepositoryHelper.dbConnector.executeDelete("""
+            DELETE FROM SshKeys WHERE publicKey=:key
+        """, mapOf("key" to publicKey))
+    }
 }
