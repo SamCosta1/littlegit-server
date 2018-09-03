@@ -29,6 +29,12 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
             throw DuplicateRecordException(User::class.java)
         }
 
+        val userHasRepoOnServer = repoAccessRepository.userHasRepoOnServer(server, user) ?: throw UnknownError()
+
+        if (!userHasRepoOnServer) {
+            // Add the user's ssh keys to the server
+        }
+
         // Init the repo on the server
         val clonePath = littleGitCoreWrapper.initRepo(user, createRepoModel, server)
 
@@ -42,7 +48,7 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
         }
 
         repoAccessRepository.grantRepoAccess(user, repoId, repoAccessLevel)
-
+        repoAccessRepository.invalidateCache(user, server)
         return repoRepository.getRepoSummary(repoId)
     }
 }

@@ -17,7 +17,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
-import java.nio.file.Paths
 
 class RepoServiceTests {
 
@@ -53,7 +52,7 @@ class RepoServiceTests {
         val user = UserHelper.createTestUser()
         val repoName = "PlansForMoria"
 
-        upon(gitServerRepository.getBestGitServerForUser(user)).thenReturn(GitServerHelper.createGitServer())
+        upon(gitServerRepository.getBestGitServerForUser(user)).thenReturn(GitServerHelper.gitServer())
         upon(repoRepoMock.getRepoByNameAndCreator(user, repoName)).thenReturn(RepoHelper.createTestRepo(name = repoName, user = user))
 
         repoService.createRepo(user, CreateRepoModel(repoName))
@@ -65,7 +64,7 @@ class RepoServiceTests {
         val user = UserHelper.createTestUser(authRole = AuthRole.BasicUser)
         val repoName = "PlansForMoria"
         val createModel = CreateRepoModel(repoName)
-        val server = GitServerHelper.createGitServer()
+        val server = GitServerHelper.gitServer()
         val repoId = 1
         val cloneUrlPath = "git@ipaddress:/${user.username}/$repoName"
 
@@ -85,7 +84,7 @@ class RepoServiceTests {
         val user = UserHelper.createTestUser(authRole = AuthRole.Admin)
         val repoName = "PlansForMoria"
         val createModel = CreateRepoModel(repoName)
-        val server = GitServerHelper.createGitServer()
+        val server = GitServerHelper.gitServer()
         val repoId = 1
         val cloneUrlPath = "git@ipaddress:/${user.username}/$repoName"
 
@@ -105,7 +104,7 @@ class RepoServiceTests {
         val user = UserHelper.createTestUser(authRole = AuthRole.OrganizationAdmin)
         val repoName = "PlansForMoria"
         val createModel = CreateRepoModel(repoName)
-        val server = GitServerHelper.createGitServer()
+        val server = GitServerHelper.gitServer()
         val repoId = 1
         val cloneUrlPath = "${user.username}/$repoName"
 

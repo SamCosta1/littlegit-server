@@ -2,6 +2,7 @@ package com.littlegit.server.repo
 
 import com.littlegit.server.db.Cache
 import com.littlegit.server.db.DatabaseConnector
+import com.littlegit.server.model.GitServer
 import com.littlegit.server.model.repo.RepoId
 import com.littlegit.server.model.repo.RepoAccess
 import com.littlegit.server.model.repo.RepoAccessLevel
@@ -12,16 +13,24 @@ import javax.inject.Inject
 
 object RepoAccessCacheKeys {
     const val REPO_ACCESS_CACHE_KEY = "RepoAccess(UserId:{0}, RepoId: {1})"
+    const val USER_HAS_REPO_ON_SERVER_KEY = "UserHasRepoOnServer(UserId: {0}, RepoId: {1})"
 }
 class RepoAccessRepository @Inject constructor (private val dbCon: DatabaseConnector,
                                                 private val cache: Cache) {
 
     fun grantRepoAccess(user: User, repoId: RepoId, level: RepoAccessLevel) = upsertRepoAccess(user, repoId, level, hasAccess = true)
-    fun revokeRepoAccess(user: User, repoId: RepoId, level: RepoAccessLevel) = upsertRepoAccess(user, repoId, level, hasAccess = false)
+
+    fun revokeRepoAccess(user: User, repoId: RepoId) {
+        val currentAccess = getRepoAccessStatus(user, repoId)
+
+        if (currentAccess?.active == true) {
+            upsertRepoAccess(user, repoId, currentAccess.level, hasAccess = false)
+        }
+    }
 
     private fun upsertRepoAccess(user: User, repoId: RepoId, level: RepoAccessLevel, hasAccess: Boolean) {
 
-        dbCon.executeInsert("""
+        val sql = """
             INSERT INTO RepoAccess
                 (repoId, userId, active, level)
             VALUES
@@ -29,12 +38,17 @@ class RepoAccessRepository @Inject constructor (private val dbCon: DatabaseConne
             ON DUPLICATE KEY UPDATE
                 active = :active,
                 level = :level
-        """, params = mapOf(
-           "repoId" to repoId,
-           "userId" to user.id,
-           "level" to level,
-           "active" to hasAccess
-        ))
+        """
+
+        val params = mapOf(
+                "repoId" to repoId,
+                "userId" to user.id,
+                "active" to hasAccess,
+                "level" to level
+        )
+
+
+        dbCon.executeInsert(sql, params = params)
 
         invalidateCache(user.id, repoId)
     }
@@ -61,7 +75,30 @@ class RepoAccessRepository @Inject constructor (private val dbCon: DatabaseConne
         }
     }
 
+    /***
+     *  Returns true if the user has access to any repositories on the given server, false otherwise
+     */
+    fun userHasRepoOnServer(server: GitServer, user: User): Boolean? {
+        return cache.retrieve(RepoAccessCacheKeys.USER_HAS_REPO_ON_SERVER_KEY.inject(user.id, server.id), Boolean::class.java) {
+            val sql = """
+                SELECT COUNT(repoId) > 0
+                FROM RepoAccess
+                INNER JOIN Repos ON RepoAccess.userId = Repos.creatorId
+                AND RepoAccess.repoId = Repos.id
+                WHERE Repos.serverId = :serverId
+                AND RepoAccess.userId = :userId
+                AND RepoAccess.active = true
+            """
+
+            val params = mapOf( "userId" to user.id,
+                                "serverId" to server.id)
+
+            dbCon.executeScalar(sql, Boolean::class.java, params = params)?.firstOrNull()
+        }
+    }
+
     fun invalidateCache(userId: UserId, repoId: RepoId)
             = cache.delete(RepoAccessCacheKeys.REPO_ACCESS_CACHE_KEY.inject(userId, repoId))
 
+    fun invalidateCache(user: User, server: GitServer) = cache.delete(RepoAccessCacheKeys.USER_HAS_REPO_ON_SERVER_KEY.inject(user.id, server.id))
 }
