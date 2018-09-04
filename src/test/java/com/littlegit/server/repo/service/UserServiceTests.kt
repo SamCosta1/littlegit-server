@@ -5,6 +5,8 @@ import com.littlegit.server.application.exception.NotFoundException
 import com.littlegit.server.application.exception.UserForbiddenException
 import com.littlegit.server.model.InvalidModelException
 import com.littlegit.server.model.user.AuthRole
+import com.littlegit.server.repo.GitServerRepository
+import com.littlegit.server.repo.SshKeyRepository
 import com.littlegit.server.repo.UserRepository
 import com.littlegit.server.repo.testUtils.UserHelper
 import com.littlegit.server.repo.testUtils.upon
@@ -20,11 +22,16 @@ class UserServiceTests {
 
     private lateinit var userService: UserService
     private lateinit var userRepoMock: UserRepository
+    private lateinit var gitServerRepoMock: GitServerRepository
+    private lateinit var sshKeyRepoMock: SshKeyRepository
 
     @Before
     fun setup() {
         userRepoMock = mock(UserRepository::class.java)
-        userService = UserService(userRepoMock)
+        gitServerRepoMock = mock(GitServerRepository::class.java)
+        sshKeyRepoMock = mock(SshKeyRepository::class.java)
+
+        userService = UserService(userRepoMock, gitServerRepoMock, sshKeyRepoMock)
     }
 
     @Test(expected = EmailInUseException::class)
