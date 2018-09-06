@@ -4,7 +4,7 @@ import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.db.Cache
 import com.littlegit.server.db.DatabaseConnector
 import com.littlegit.server.repo.*
-import com.littlegit.server.serializatoin.MoshiModule
+import com.littlegit.server.application.serialization.MoshiModule
 import com.littlegit.server.util.TokenGenerator
 
 object RepositoryHelper {

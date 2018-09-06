@@ -2,6 +2,7 @@ package com.littlegit.server.controller;
 
 import com.littlegit.server.authfilter.Secured;
 import com.littlegit.server.model.user.AuthRole;
+import com.littlegit.server.model.user.CreateSshKeyModel;
 import com.littlegit.server.model.user.SignupModel;
 import com.littlegit.server.model.user.User;
 import com.littlegit.server.service.UserService;
@@ -42,5 +43,12 @@ public class UserController {
     @Path("/signup")
     public void signup(SignupModel signupModel) {
         this.userService.createUser(signupModel);
+    }
+
+    @POST
+    @Path("/add-ssh-key")
+    @Secured({ AuthRole.Admin, AuthRole.OrganizationAdmin, AuthRole.BasicUser})
+    public void addSshKey(@Context SecurityContext context, CreateSshKeyModel model) {
+        this.userService.addSshKeyToUser(CastingUtilsKt.asUser(context.getUserPrincipal()), model);
     }
 }

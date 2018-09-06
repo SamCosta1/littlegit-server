@@ -16,8 +16,12 @@
    },
    "isDebug": true,
    "gitServer": {
-      "sshUser": "root",
+      "sshUser": "server",
       "reposDirectory": "/Git",
-      "gitUser": "git"
+      "gitUser": "git",
+      "scripts": {
+         "addSshKey": "/home/server/scripts/add-ssh-key.sh"
+      }
+
    }
 }

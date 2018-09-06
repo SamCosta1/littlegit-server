@@ -1,5 +1,6 @@
 package com.littlegit.server.repo.testUtils
 
+import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.service.AuthService
 import com.littlegit.server.service.RepoService
 import littlegitcore.LittleGitCoreWrapper
@@ -16,5 +17,6 @@ object ServiceHelper {
             RepositoryHelper.repoRepository,
             RepositoryHelper.repoAccessRepository,
             RepositoryHelper.gitServerRepository,
+            RepositoryHelper.sshKeyRepository,
             littlegitCoreWrapper)
 }

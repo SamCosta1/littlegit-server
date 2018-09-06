@@ -7,6 +7,7 @@ import com.littlegit.server.model.user.AuthRole
 import com.littlegit.server.repo.GitServerRepository
 import com.littlegit.server.repo.RepoAccessRepository
 import com.littlegit.server.repo.RepoRepository
+import com.littlegit.server.repo.SshKeyRepository
 import com.littlegit.server.repo.testUtils.GitServerHelper
 import com.littlegit.server.repo.testUtils.RepoHelper
 import com.littlegit.server.repo.testUtils.UserHelper
@@ -26,6 +27,7 @@ class RepoServiceTests {
     private lateinit var repoAccessRepoMock: RepoAccessRepository
     private lateinit var gitServerRepository: GitServerRepository
     private lateinit var littleGitCoreWrapper: LittleGitCoreWrapper
+    private lateinit var sshKeyRepository: SshKeyRepository
 
     @Before
     fun setup() {
@@ -33,8 +35,9 @@ class RepoServiceTests {
         repoAccessRepoMock = mock(RepoAccessRepository::class.java)
         gitServerRepository = mock(GitServerRepository::class.java)
         littleGitCoreWrapper = mock(LittleGitCoreWrapper::class.java)
+        sshKeyRepository = mock(SshKeyRepository::class.java)
 
-        repoService = RepoService(repoRepoMock, repoAccessRepoMock, gitServerRepository, littleGitCoreWrapper)
+        repoService = RepoService(repoRepoMock, repoAccessRepoMock, gitServerRepository, sshKeyRepository, littleGitCoreWrapper)
     }
 
     @Test(expected = Exception::class)

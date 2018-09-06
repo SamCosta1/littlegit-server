@@ -10,12 +10,14 @@ import com.littlegit.server.model.user.User
 import com.littlegit.server.repo.GitServerRepository
 import com.littlegit.server.repo.RepoAccessRepository
 import com.littlegit.server.repo.RepoRepository
+import com.littlegit.server.repo.SshKeyRepository
 import littlegitcore.LittleGitCoreWrapper
 import javax.inject.Inject
 
 class RepoService @Inject constructor (private val repoRepository: RepoRepository,
                                        private val repoAccessRepository: RepoAccessRepository,
                                        private val gitServerRepository: GitServerRepository,
+                                       private val sshKeyRepository: SshKeyRepository,
                                        private val littleGitCoreWrapper: LittleGitCoreWrapper) {
 
     fun createRepo(user: User, createRepoModel: CreateRepoModel): RepoSummary? {
@@ -33,6 +35,11 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
 
         if (!userHasRepoOnServer) {
             // Add the user's ssh keys to the server
+            val sshKeys = sshKeyRepository.getSshKeysForUser(user, true)
+            sshKeys?.forEach {
+
+
+            }
         }
 
         // Init the repo on the server

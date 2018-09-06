@@ -2,10 +2,9 @@ package com.littlegit.server.repo
 
 import com.littlegit.server.db.Cache
 import com.littlegit.server.db.DatabaseConnector
-import com.littlegit.server.model.GitServer
 import com.littlegit.server.model.InvalidModelException
 import com.littlegit.server.model.user.CreateSshKeyModel
-import com.littlegit.server.model.user.SshKey
+import com.littlegit.server.model.user.FullSshKey
 import com.littlegit.server.model.user.SshKeyId
 import com.littlegit.server.model.user.User
 import javax.inject.Inject
@@ -13,7 +12,7 @@ import javax.inject.Inject
 class SshKeyRepository@Inject constructor (private val dbCon: DatabaseConnector,
                                            private val cache: Cache) {
 
-    fun getSshKeysForUser(user: User, activeOnly: Boolean = true): List<SshKey>? {
+    fun getSshKeysForUser(user: User, activeOnly: Boolean = true): List<FullSshKey>? {
         var sql = """
             SELECT * FROM SshKeys
             WHERE userId=:userId
@@ -26,7 +25,7 @@ class SshKeyRepository@Inject constructor (private val dbCon: DatabaseConnector,
             """
         }
 
-        return dbCon.executeSelect(sql, SshKey::class.java, params = mapOf("userId" to user.id))
+        return dbCon.executeSelect(sql, FullSshKey::class.java, params = mapOf("userId" to user.id))
     }
 
     fun createSshKey(createModel: CreateSshKeyModel): SshKeyId? {

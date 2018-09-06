@@ -23,7 +23,7 @@ internal fun assertGitServer(createModel: CreateGitServerModel, actual: GitServe
     assertEquals(createModel.region, actual?.region)
 }
 
-internal fun assertSshKey(createModel: CreateSshKeyModel, createdId: SshKeyId, actual: SshKey) {
+internal fun assertSshKey(createModel: CreateSshKeyModel, createdId: SshKeyId, actual: FullSshKey) {
     assertEquals(createModel.active, actual.active)
     assertEquals(createModel.publicKey, actual.publicKey)
     assertEquals(createModel.userId, actual.userId)

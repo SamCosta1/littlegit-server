@@ -5,12 +5,20 @@ import com.littlegit.server.model.ValidatableResult
 import com.littlegit.server.model.i18n.LocalizableString
 
 typealias SshKeyId = Int
-data class SshKey(val id: Int,
-                  val publicKey: String,
-                  val userId: Int,
-                  val active: Boolean)
+data class FullSshKey(val id: Int,
+                      override val publicKey: String,
+                      override val userId: Int,
+                      override val active: Boolean): SshKey
 
-data class CreateSshKeyModel(val publicKey: String, val userId: Int, val active: Boolean = true): Validatable {
+interface SshKey {
+    val publicKey: String
+    val userId: Int
+    val active: Boolean
+}
+
+data class CreateSshKeyModel(override val publicKey: String,
+                             override val userId: Int,
+                             override val active: Boolean = true): Validatable, SshKey {
 
     override fun validate(): ValidatableResult {
         val invalidMessages = mutableListOf<LocalizableString>()

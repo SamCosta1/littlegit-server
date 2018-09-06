@@ -3,6 +3,7 @@ package com.littlegit.server.service
 import com.littlegit.server.application.exception.EmailInUseException
 import com.littlegit.server.application.exception.NotFoundException
 import com.littlegit.server.application.exception.UserForbiddenException
+import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.model.user.*
 import com.littlegit.server.repo.GitServerRepository
 import com.littlegit.server.repo.SshKeyRepository
@@ -14,6 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class UserService @Inject constructor (private val userRepository: UserRepository,
                                        private val gitServerRepository: GitServerRepository,
+                                       private val remoteCommandRunner: RemoteCommandRunner,
                                        private val sshKeyRepository: SshKeyRepository) {
 
     fun getUser(currentUser: User, userId: Int): User {
@@ -58,8 +60,8 @@ class UserService @Inject constructor (private val userRepository: UserRepositor
             // All the servers that contain repos the user has access to
             val servers = gitServerRepository.getUserServers(createSshKeyModel.userId)
 
-            servers?.forEach {
-
+            servers?.forEach { server ->
+                remoteCommandRunner.addSshKey(createSshKeyModel, server)
             }
         } else {
             throw UserForbiddenException()
