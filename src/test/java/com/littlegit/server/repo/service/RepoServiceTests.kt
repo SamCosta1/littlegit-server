@@ -1,6 +1,7 @@
 package com.littlegit.server.repo.service
 
 import com.littlegit.server.application.exception.DuplicateRecordException
+import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.model.repo.CreateRepoModel
 import com.littlegit.server.model.repo.RepoAccessLevel
 import com.littlegit.server.model.user.AuthRole
@@ -28,6 +29,7 @@ class RepoServiceTests {
     private lateinit var gitServerRepository: GitServerRepository
     private lateinit var littleGitCoreWrapper: LittleGitCoreWrapper
     private lateinit var sshKeyRepository: SshKeyRepository
+    private lateinit var remoteCommandRunner: RemoteCommandRunner
 
     @Before
     fun setup() {
@@ -36,8 +38,9 @@ class RepoServiceTests {
         gitServerRepository = mock(GitServerRepository::class.java)
         littleGitCoreWrapper = mock(LittleGitCoreWrapper::class.java)
         sshKeyRepository = mock(SshKeyRepository::class.java)
+        remoteCommandRunner = mock(RemoteCommandRunner::class.java)
 
-        repoService = RepoService(repoRepoMock, repoAccessRepoMock, gitServerRepository, sshKeyRepository, littleGitCoreWrapper)
+        repoService = RepoService(repoRepoMock, repoAccessRepoMock, gitServerRepository, sshKeyRepository, remoteCommandRunner, littleGitCoreWrapper)
     }
 
     @Test(expected = Exception::class)

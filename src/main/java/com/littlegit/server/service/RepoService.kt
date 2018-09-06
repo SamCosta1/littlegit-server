@@ -1,6 +1,7 @@
 package com.littlegit.server.service
 
 import com.littlegit.server.application.exception.DuplicateRecordException
+import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.model.repo.CreateRepoModel
 import com.littlegit.server.model.repo.Repo
 import com.littlegit.server.model.repo.RepoAccessLevel
@@ -18,6 +19,7 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
                                        private val repoAccessRepository: RepoAccessRepository,
                                        private val gitServerRepository: GitServerRepository,
                                        private val sshKeyRepository: SshKeyRepository,
+                                       private val remoteCommandRunner: RemoteCommandRunner,
                                        private val littleGitCoreWrapper: LittleGitCoreWrapper) {
 
     fun createRepo(user: User, createRepoModel: CreateRepoModel): RepoSummary? {
@@ -37,8 +39,7 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
             // Add the user's ssh keys to the server
             val sshKeys = sshKeyRepository.getSshKeysForUser(user, true)
             sshKeys?.forEach {
-
-
+                remoteCommandRunner.addSshKey(it, server)
             }
         }
 

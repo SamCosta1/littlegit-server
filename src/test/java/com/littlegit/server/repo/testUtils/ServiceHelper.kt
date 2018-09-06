@@ -7,6 +7,7 @@ import littlegitcore.LittleGitCoreWrapper
 
 object ServiceHelper {
     private val littlegitCoreWrapper = LittleGitCoreWrapper(RepositoryHelper.settingsProvider)
+    private val remoteCommandRunner = RemoteCommandRunner(RepositoryHelper.settingsProvider)
 
     val authService: AuthService = AuthService(
             RepositoryHelper.authRepository,
@@ -18,5 +19,6 @@ object ServiceHelper {
             RepositoryHelper.repoAccessRepository,
             RepositoryHelper.gitServerRepository,
             RepositoryHelper.sshKeyRepository,
+            remoteCommandRunner,
             littlegitCoreWrapper)
 }
