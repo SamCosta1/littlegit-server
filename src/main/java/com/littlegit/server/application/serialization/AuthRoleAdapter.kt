@@ -1,4 +1,4 @@
-package com.littlegit.server.serializatoin
+package com.littlegit.server.application.serialization
 
 import com.littlegit.server.application.exception.NoSuchEnumValueException
 import com.littlegit.server.model.GitServerRegion

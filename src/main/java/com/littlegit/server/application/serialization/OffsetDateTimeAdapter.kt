@@ -1,4 +1,4 @@
-package com.littlegit.server.serializatoin
+package com.littlegit.server.application.serialization
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
