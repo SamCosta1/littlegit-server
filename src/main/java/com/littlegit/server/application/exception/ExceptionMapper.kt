@@ -57,9 +57,9 @@ class ExceptionMapper: Exception(), ExceptionMapper<Throwable> {
                 status = 400
                 errorResponse = ErrorResponse("Bad Request", throwable.result.invalidMessages)
             }
-            is EmailInUseException -> {
+            is ValueInUseException -> {
                 status = 400
-                errorResponse = ErrorResponse("Bad Request", LocalizableString.EmailInUse, "${throwable.email} already in use")
+                errorResponse = ErrorResponse("Bad Request", throwable.localizableString, "${throwable.value} already in use")
             }
             is DuplicateRecordException -> {
                 status = 400

@@ -1,12 +1,15 @@
 package com.littlegit.server.application.exception
 
+import com.littlegit.server.model.i18n.LocalizableString
 import com.littlegit.server.model.user.User
 import org.littlegit.core.model.GitError
 import org.littlegit.core.shell.ShellResult
 import java.lang.RuntimeException
 import kotlin.reflect.KClass
 
-data class EmailInUseException(val email: String) : Throwable()
+data class EmailInUseException(val email: String) : ValueInUseException(LocalizableString.EmailInUse, email)
+data class UsernameInUserException(val username: String) : ValueInUseException(LocalizableString.UsernameInUse, username)
+open class ValueInUseException( val localizableString: LocalizableString, val value: String ): Throwable()
 
 data class NoSuchEnumValueException(val code: Any) : Exception()
 
