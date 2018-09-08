@@ -36,6 +36,7 @@ object CleanupHelper {
         }
     }
 
+    fun cleanupRepos(vararg repos: String) = repos.forEach { cleanupRepo(it) }
     fun cleanupRepo(repoName: String) {
         val ids = getIds(mapOf("name" to repoName), "Repos", "repoName=:name")
 
@@ -53,14 +54,27 @@ object CleanupHelper {
 
         ids.forEach {
             RepositoryHelper.dbConnector.executeDelete("""
-                DELETE FROM RepoAccess WHERE userId=:userId
-                AND repoId = :repoId
-            """, mapOf("userId" to userId, "repoId" to it.toInt()))
+                DELETE FROM RepoAccess WHERE repoId = :repoId
+            """, mapOf("repoId" to it.toInt()))
 
             RepositoryHelper.repoAccessRepository.invalidateCache(userId, it.toInt())
         }
     }
 
+    fun cleanupRepoAccess(email: String, repoName: String) {
+        val ids = getIds(mapOf("name" to repoName), "Repos", "repoName=:name")
+        val user = RepositoryHelper.userRepository.getUser(email)
+
+        ids.forEach {
+            RepositoryHelper.dbConnector.executeDelete("""
+                DELETE FROM RepoAccess WHERE AND repoId = :repoId
+            """, mapOf("repoId" to it.toInt()))
+
+            RepositoryHelper.repoAccessRepository.invalidateCache(user?.id ?: 0, it.toInt())
+        }
+    }
+
+    fun cleanupServers(vararg ips: InetAddress) = ips.forEach { cleanupServer(it) }
     fun cleanupServer(ip: InetAddress) {
         val ids = getIds(mapOf("ip" to ip), "GitServers", "ip=:ip")
 
@@ -80,5 +94,11 @@ object CleanupHelper {
         return RepositoryHelper.dbConnector.executeScalar("""
             SELECT id FROM $table WHERE $whereClause
         """, Integer::class.java, params = params) ?: emptyList()
+    }
+
+    fun cleanupSshKey(publicKey: String) {
+        RepositoryHelper.dbConnector.executeDelete("""
+            DELETE FROM SshKeys WHERE publicKey=:key
+        """, mapOf("key" to publicKey))
     }
 }

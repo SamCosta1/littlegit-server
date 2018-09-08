@@ -2,10 +2,7 @@ package com.littlegit.server;
 
 import com.littlegit.server.application.CorsFilter;
 import com.littlegit.server.application.exception.ExceptionMapper;
-import com.littlegit.server.serializatoin.MoshiModule;
 import org.glassfish.jersey.server.ResourceConfig;
-
-import java.util.Random;
 
 public class LittleGitServerApplication extends ResourceConfig {
 

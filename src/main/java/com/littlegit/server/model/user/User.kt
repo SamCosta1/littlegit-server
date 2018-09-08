@@ -32,9 +32,8 @@ open class User(val id: UserId,
         return User(id, email, firstName, surname, role, languageCode, username)
     }
 
-    fun hasAnyRoleOf(allowedRoles: List<AuthRole>): Boolean {
-        return allowedRoles.contains(role)
-    }
+    fun hasAnyRoleOf(allowedRoles: List<AuthRole>): Boolean = allowedRoles.contains(role)
+    fun hasAnyRoleOf(allowedRole: AuthRole): Boolean = allowedRole == role
 }
 
 class CreateUserModel(val email: String,

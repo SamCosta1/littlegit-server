@@ -9,6 +9,11 @@ data class LittleGitSettings(val db: DbConfig,
                              val isDebug: Boolean = false,
                              val gitServer: GitServerConfig)
 
-data class GitServerConfig(val sshUser: String, private val reposDirectory: String) {
+data class GitServerConfig(val sshUser: String,
+                           private val reposDirectory: String,
+                           val gitUser: String,
+                           val scripts: GitServerScripts) {
     val reposPath: Path; get() = Paths.get(reposDirectory)
 }
+
+data class GitServerScripts(val addSshKey: String)

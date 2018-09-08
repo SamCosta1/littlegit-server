@@ -1,6 +1,7 @@
 package com.littlegit.server.service
 
 import com.littlegit.server.application.exception.DuplicateRecordException
+import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.model.repo.CreateRepoModel
 import com.littlegit.server.model.repo.Repo
 import com.littlegit.server.model.repo.RepoAccessLevel
@@ -10,12 +11,15 @@ import com.littlegit.server.model.user.User
 import com.littlegit.server.repo.GitServerRepository
 import com.littlegit.server.repo.RepoAccessRepository
 import com.littlegit.server.repo.RepoRepository
+import com.littlegit.server.repo.SshKeyRepository
 import littlegitcore.LittleGitCoreWrapper
 import javax.inject.Inject
 
 class RepoService @Inject constructor (private val repoRepository: RepoRepository,
                                        private val repoAccessRepository: RepoAccessRepository,
                                        private val gitServerRepository: GitServerRepository,
+                                       private val sshKeyRepository: SshKeyRepository,
+                                       private val remoteCommandRunner: RemoteCommandRunner,
                                        private val littleGitCoreWrapper: LittleGitCoreWrapper) {
 
     fun createRepo(user: User, createRepoModel: CreateRepoModel): RepoSummary? {
@@ -29,11 +33,21 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
             throw DuplicateRecordException(User::class.java)
         }
 
+        val userHasRepoOnServer = repoAccessRepository.userHasRepoOnServer(server, user) ?: throw UnknownError()
+
+        if (!userHasRepoOnServer) {
+            // Add the user's ssh keys to the server
+            val sshKeys = sshKeyRepository.getSshKeysForUser(user, true)
+            sshKeys?.forEach {
+                remoteCommandRunner.addSshKey(it, server)
+            }
+        }
+
         // Init the repo on the server
         val clonePath = littleGitCoreWrapper.initRepo(user, createRepoModel, server)
 
         // Create a record for the repo in the db
-        val repoId = repoRepository.createRepo(createRepoModel, user, clonePath.toString(), server.id)
+        val repoId = repoRepository.createRepo(createRepoModel, user, clonePath, server.id)
 
         // Give this user access to it
         val repoAccessLevel = when(user.role) {
@@ -42,7 +56,7 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
         }
 
         repoAccessRepository.grantRepoAccess(user, repoId, repoAccessLevel)
-
+        repoAccessRepository.invalidateCache(user, server)
         return repoRepository.getRepoSummary(repoId)
     }
 }

@@ -1,17 +1,14 @@
 package com.littlegit.server.repo.repo
 
-import com.littlegit.server.model.repo.Repo
 import com.littlegit.server.model.repo.RepoAccess
 import com.littlegit.server.model.repo.RepoAccessLevel
-import com.littlegit.server.model.user.User
 import com.littlegit.server.repo.RepoAccessCacheKeys
-import com.littlegit.server.repo.testUtils.CleanupHelper
-import com.littlegit.server.repo.testUtils.RepoHelper
-import com.littlegit.server.repo.testUtils.RepositoryHelper
-import com.littlegit.server.repo.testUtils.UserHelper
+import com.littlegit.server.repo.testUtils.*
 import com.littlegit.server.util.inject
+import junit.framework.TestCase.assertTrue
 import org.junit.Test
-import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 
 class RepoAccessRepoTests {
 
@@ -119,30 +116,112 @@ class RepoAccessRepoTests {
             assertRepo(repo, user, repoAccessLevel, true, createdRepoAccess)
 
             // Now update it
-            val updatedRepoAccessLevel = RepoAccessLevel.Owner
-            RepositoryHelper.repoAccessRepository.revokeRepoAccess(user, repo.id, updatedRepoAccessLevel)
+            RepositoryHelper.repoAccessRepository.revokeRepoAccess(user, repo.id)
 
             // Check updated - not clearing the cache to check it was invalidated
             RepositoryHelper.cache.delete(cacheKey)
             val updatedRepoAccess = RepositoryHelper.repoAccessRepository.getRepoAccessStatus(user, repo.id)
 
             // Check all the values are as expected
-            assertRepo(repo, user, updatedRepoAccessLevel, false, updatedRepoAccess)
+            assertRepo(repo, user, repoAccessLevel, false, updatedRepoAccess)
 
             // Check exists in cache
             val repoAccessFromCache = RepositoryHelper.cache.get(cacheKey, RepoAccess::class.java)
-            assertRepo(repo, user, updatedRepoAccessLevel, false, repoAccessFromCache)
+            assertRepo(repo, user, repoAccessLevel, false, repoAccessFromCache)
 
         } finally {
             cleaner()
         }
     }
 
-    private fun assertRepo(repo: Repo, user: User, repoAccessLevel: RepoAccessLevel, active: Boolean, repoAccess: RepoAccess?) {
-        assertEquals(repo.id, repoAccess?.repoId)
-        assertEquals(user.id, repoAccess?.userId)
-        assertEquals(repoAccessLevel, repoAccess?.level)
-        assertEquals(active, repoAccess?.active)
+    @Test
+    fun testUserHasRepoOnServer_UserHasNoRepos_IsSuccessful() {
+        val userSignup = UserHelper.createSignupModel()
+        val createServerModel = GitServerHelper.createGitServerModel()
+
+        val cleaner = {
+            CleanupHelper.cleanupUser(userSignup.email)
+            CleanupHelper.cleanupServer(createServerModel.ip)
+        }
+        cleaner()
+
+        try {
+            val userId = RepositoryHelper.userRepository.createUser(userSignup)!!
+            val serverId = RepositoryHelper.gitServerRepository.createGitServer(createServerModel)
+
+            val server = RepositoryHelper.gitServerRepository.getGitServer(serverId)!!
+            val user = RepositoryHelper.userRepository.getUser(userId)!!
+
+            val userHasRepoOnServer = RepositoryHelper.repoAccessRepository.userHasRepoOnServer(server, user)
+            assertNotNull(userHasRepoOnServer); userHasRepoOnServer!!
+            assertFalse(userHasRepoOnServer)
+        } finally {
+            cleaner()
+        }
     }
+
+    @Test
+    fun testUserHasRepoOnServer_UserHasRepo_IsSuccessful() {
+        val userSignup = UserHelper.createSignupModel()
+        val createServerModel = GitServerHelper.createGitServerModel()
+        val repoName = "GandalfsRepo"
+
+        val cleaner = {
+            CleanupHelper.cleanupRepo(repoName)
+            CleanupHelper.cleanupUser(userSignup.email)
+            CleanupHelper.cleanupServer(createServerModel.ip)
+        }
+        cleaner()
+
+        try {
+            val userId = RepositoryHelper.userRepository.createUser(userSignup)!!
+            val serverId = RepositoryHelper.gitServerRepository.createGitServer(createServerModel)
+
+            val server = RepositoryHelper.gitServerRepository.getGitServer(serverId)!!
+            val user = RepositoryHelper.userRepository.getUser(userId)!!
+            val repo = RepoHelper.insertTestRepo(repoName = repoName, user = user, serverId = serverId)
+
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo.id, RepoAccessLevel.Contributor)
+
+            val userHasRepoOnServer = RepositoryHelper.repoAccessRepository.userHasRepoOnServer(server, user)
+            assertNotNull(userHasRepoOnServer); userHasRepoOnServer!!
+            assertTrue(userHasRepoOnServer)
+        } finally {
+            cleaner()
+        }
+    }
+
+    @Test
+    fun testUserHasRepoOnServer_UserHasRepo_AccessRevoked_IsSuccessful() {
+        val userSignup = UserHelper.createSignupModel()
+        val createServerModel = GitServerHelper.createGitServerModel()
+        val repoName = "GandalfsRepo"
+
+        val cleaner = {
+            CleanupHelper.cleanupRepo(repoName)
+            CleanupHelper.cleanupUser(userSignup.email)
+            CleanupHelper.cleanupServer(createServerModel.ip)
+        }
+        cleaner()
+
+        try {
+            val userId = RepositoryHelper.userRepository.createUser(userSignup)!!
+            val serverId = RepositoryHelper.gitServerRepository.createGitServer(createServerModel)
+
+            val server = RepositoryHelper.gitServerRepository.getGitServer(serverId)!!
+            val user = RepositoryHelper.userRepository.getUser(userId)!!
+            val repo = RepoHelper.insertTestRepo(repoName = repoName, user = user)
+
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo.id, RepoAccessLevel.Contributor)
+            RepositoryHelper.repoAccessRepository.revokeRepoAccess(user, repo.id)
+
+            val userHasRepoOnServer = RepositoryHelper.repoAccessRepository.userHasRepoOnServer(server, user)
+            assertNotNull(userHasRepoOnServer); userHasRepoOnServer!!
+            assertFalse(userHasRepoOnServer)
+        } finally {
+            cleaner()
+        }
+    }
+
 
 }

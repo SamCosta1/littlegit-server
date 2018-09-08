@@ -13,19 +13,18 @@ import javax.inject.Inject
 
 class LittleGitCoreWrapper @Inject constructor(private val settingsProvider: SettingsProvider) {
 
-    fun initRepo(user: User, repo: CreateRepoModel, server: GitServer): Path {
+    fun initRepo(user: User, repo: CreateRepoModel, server: GitServer): String {
 
         val littleGit = buildLittleGitCore(server)
         val repoPath = "${user.username.stripWhiteSpace()}/${repo.repoName.stripWhiteSpace()}"
 
         val result = littleGit.repoModifier.initializeRepo(bare = true, name = repoPath).result
 
-
         if (result is GitResult.Error) {
             throw LittleGitCommandFailedException(result.err)
         }
 
-        return settingsProvider.settings.gitServer.reposPath.resolve(repoPath).normalize()
+        return "${settingsProvider.settings.gitServer.gitUser}@${server.ip.hostAddress}:${settingsProvider.settings.gitServer.reposPath.resolve(repoPath).normalize()}"
     }
 
     private fun buildLittleGitCore(server: GitServer): LittleGitCore =

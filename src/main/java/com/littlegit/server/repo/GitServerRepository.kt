@@ -8,6 +8,7 @@ import com.littlegit.server.model.GitServerId
 import com.littlegit.server.model.InvalidModelException
 import com.littlegit.server.model.repo.Repo
 import com.littlegit.server.model.user.User
+import com.littlegit.server.model.user.UserId
 import com.littlegit.server.util.inject
 import javax.inject.Inject
 
@@ -51,6 +52,20 @@ class GitServerRepository @Inject constructor (private val dbCon: DatabaseConnec
 
             gitServers?.firstOrNull()
         }
+    }
+
+
+    /**
+     * Returns a list of all the servers with repos that the user has access to
+     */
+    fun getUserServers(userId: UserId): List<GitServer>? {
+        return dbCon.executeSelect("""
+            SELECT DISTINCT GitServers.* FROM GitServers
+            INNER JOIN Repos ON Repos.serverId = GitServers.id
+            INNER JOIN RepoAccess On RepoAccess.repoId = Repos.id
+            WHERE RepoAccess.userId = :userId
+            AND RepoAccess.active = true
+        """, GitServer::class.java, params = mapOf("userId" to userId))
     }
 
     // TODO: Make this take into account the number of repos on each server, the user's region etc etc etc

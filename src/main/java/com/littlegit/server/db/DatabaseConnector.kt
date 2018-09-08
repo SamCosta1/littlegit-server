@@ -1,14 +1,11 @@
 package com.littlegit.server.db
 
 import com.littlegit.server.application.settings.SettingsProvider
-import com.littlegit.server.model.auth.TokenType
-import com.littlegit.server.model.user.AuthRole
-import com.littlegit.server.serializatoin.*
+import com.littlegit.server.application.serialization.*
 import org.sql2o.Query
 import org.sql2o.Sql2o
 import org.sql2o.converters.Converter
 import org.sql2o.quirks.NoQuirks
-import java.io.Serializable
 import java.math.BigInteger
 import java.net.Inet4Address
 import java.net.Inet6Address

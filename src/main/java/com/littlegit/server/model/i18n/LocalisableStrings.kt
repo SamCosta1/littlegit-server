@@ -20,5 +20,7 @@ enum class LocalizableString(val key: String) {
     InvalidCapacity("invalid_capacity"),
     UsernameBlank("blank_username"),
     InvalidUsername("invalid_username"),
-    ValueAlreadyExists("value_already_exists")
+    ValueAlreadyExists("value_already_exists"),
+    InvalidUserId("invalid_user_id"),
+    InvalidPublicKey("invalid_public_key")
 }

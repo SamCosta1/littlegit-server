@@ -5,7 +5,7 @@ import com.littlegit.server.authfilter.AuthFilter;
 import com.littlegit.server.controller.AuthController;
 import com.littlegit.server.controller.RepoController;
 import com.littlegit.server.controller.UserController;
-import com.littlegit.server.serializatoin.MoshiModule;
+import com.littlegit.server.application.serialization.MoshiModule;
 import dagger.Component;
 
 import javax.inject.Singleton;
