@@ -9,6 +9,7 @@ import com.littlegit.server.model.repo.RepoId
 import com.littlegit.server.model.user.User
 import com.littlegit.server.util.inject
 import com.littlegit.server.util.stripWhiteSpace
+import littlegitcore.RepoCreationResult
 import java.time.OffsetDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,7 +22,7 @@ object RepoCacheKeys {
 class RepoRepository @Inject constructor (private val dbCon: DatabaseConnector,
                                           private val cache: Cache) {
 
-    fun createRepo(createModel: CreateRepoModel, user: User, cloneUrlPath: String, serverId: Int): RepoId {
+    fun createRepo(createModel: CreateRepoModel, user: User, initResponse: RepoCreationResult, serverId: Int): RepoId {
 
         val validationResult = createModel.validate()
         if (validationResult.isNotValid) {
@@ -35,16 +36,18 @@ class RepoRepository @Inject constructor (private val dbCon: DatabaseConnector,
                 creatorId,
                 description,
                 serverId,
-                cloneUrlPath
+                cloneUrlPath,
+                filePath
             )
-            VALUES (:repoName, :createdDate, :creatorId, :description, :serverId, :cloneUrlPath);
+            VALUES (:repoName, :createdDate, :creatorId, :description, :serverId, :cloneUrlPath, :filePath);
         """, params = mapOf(
             "repoName" to createModel.repoName.stripWhiteSpace(),
             "createdDate" to OffsetDateTime.now(),
             "creatorId" to user.id,
             "description" to createModel.description,
             "serverId" to serverId,
-            "cloneUrlPath" to cloneUrlPath
+            "cloneUrlPath" to initResponse.cloneUrl,
+            "filePath" to initResponse.filePath
         ))
     }
 

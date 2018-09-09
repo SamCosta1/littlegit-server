@@ -1,0 +1,2 @@
+ALTER TABLE Repos
+DROP COLUMN filePath;

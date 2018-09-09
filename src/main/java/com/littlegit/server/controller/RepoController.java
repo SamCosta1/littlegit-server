@@ -27,6 +27,8 @@ public class RepoController {
     @Inject
     public RepoController(RepoService repoService) { this.repoService = repoService; }
 
+    public RepoController() {}
+
     @POST
     @Path("/create")
     @Secured({ AuthRole.Admin, AuthRole.OrganizationAdmin, AuthRole.BasicUser})
@@ -35,4 +37,12 @@ public class RepoController {
 
         return repoService.createRepo(CastingUtilsKt.asUser(context.getUserPrincipal()), createModel);
     }
+
+    @GET
+    @Path("/check-user-access")
+    @Secured({ AuthRole.GitServer })
+    public Boolean getRepoAccessStatusBoolean(@QueryParam("userId") int userId, @QueryParam("repoPath") String path) {
+        return repoService.getRepoAccessStatusBoolean(userId, path);
+    }
+
 }

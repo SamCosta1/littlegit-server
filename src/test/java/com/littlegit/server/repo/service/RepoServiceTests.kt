@@ -3,6 +3,7 @@ package com.littlegit.server.repo.service
 import com.littlegit.server.application.exception.DuplicateRecordException
 import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.model.repo.CreateRepoModel
+import com.littlegit.server.model.repo.Repo
 import com.littlegit.server.model.repo.RepoAccessLevel
 import com.littlegit.server.model.user.AuthRole
 import com.littlegit.server.repo.GitServerRepository
@@ -15,6 +16,7 @@ import com.littlegit.server.repo.testUtils.UserHelper
 import com.littlegit.server.repo.testUtils.upon
 import com.littlegit.server.service.RepoService
 import littlegitcore.LittleGitCoreWrapper
+import littlegitcore.RepoCreationResult
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers
@@ -57,12 +59,13 @@ class RepoServiceTests {
     fun testCreateRepo_WhenUserHasRepoOfSameName_ThrowsException() {
         val user = UserHelper.createTestUser()
         val repoName = "PlansForMoria"
+        val repo = RepoHelper.createTestRepo(name = repoName, user = user)
 
         upon(gitServerRepository.getBestGitServerForUser(user)).thenReturn(GitServerHelper.gitServer())
-        upon(repoRepoMock.getRepoByNameAndCreator(user, repoName)).thenReturn(RepoHelper.createTestRepo(name = repoName, user = user))
+        upon(repoRepoMock.getRepoByNameAndCreator(user, repoName)).thenReturn(repo)
 
         repoService.createRepo(user, CreateRepoModel(repoName))
-        verify(repoRepoMock, times(0)).createRepo(ArgumentMatchers.any(), user, ArgumentMatchers.anyString(), ArgumentMatchers.anyInt())
+        verify(repoRepoMock, times(0)).createRepo(ArgumentMatchers.any(), user, ArgumentMatchers.any(), ArgumentMatchers.anyInt())
     }
 
     @Test
@@ -72,17 +75,19 @@ class RepoServiceTests {
         val createModel = CreateRepoModel(repoName)
         val server = GitServerHelper.gitServer()
         val repoId = 1
-        val cloneUrlPath = "git@ipaddress:/${user.username}/$repoName"
+        val repo = RepoHelper.createTestRepo(id = repoId, user = user)
+        val repoCreationResult = RepoCreationResult("git@ipaddress:/${user.username}/$repoName", "/${user.username}/$repoName")
 
         upon(gitServerRepository.getBestGitServerForUser(user)).thenReturn(server)
         upon(repoRepoMock.getRepoByNameAndCreator(user, repoName)).thenReturn(null)
-        upon(repoRepoMock.createRepo(createModel, user, cloneUrlPath, server.id)).thenReturn(repoId)
-        upon(littleGitCoreWrapper.initRepo(user, createModel, server)).thenReturn(cloneUrlPath)
+        upon(repoRepoMock.createRepo(createModel, user, repoCreationResult, server.id)).thenReturn(repoId)
+        upon(repoRepoMock.getRepo(repoId)).thenReturn(repo)
+        upon(littleGitCoreWrapper.initRepo(user, createModel, server)).thenReturn(repoCreationResult)
 
         repoService.createRepo(user, createModel)
 
-        verify(repoRepoMock, times(repoId)).getRepoSummary(repoId)
-        verify(repoAccessRepoMock, times(repoId)).grantRepoAccess(user, repoId, RepoAccessLevel.Contributor)
+        verify(repoRepoMock, times(1)).getRepoSummary(repoId)
+        verify(repoAccessRepoMock, times(1)).grantRepoAccess(user, repo, RepoAccessLevel.Contributor)
     }
 
     @Test
@@ -92,17 +97,19 @@ class RepoServiceTests {
         val createModel = CreateRepoModel(repoName)
         val server = GitServerHelper.gitServer()
         val repoId = 1
-        val cloneUrlPath = "git@ipaddress:/${user.username}/$repoName"
+        val repoCreationResult = RepoCreationResult("git@ipaddress:/${user.username}/$repoName", "/${user.username}/$repoName")
+        val repo = RepoHelper.createTestRepo(user = user)
 
         upon(gitServerRepository.getBestGitServerForUser(user)).thenReturn(server)
         upon(repoRepoMock.getRepoByNameAndCreator(user, repoName)).thenReturn(null)
-        upon(repoRepoMock.createRepo(createModel, user, cloneUrlPath, server.id)).thenReturn(repoId)
-        upon(littleGitCoreWrapper.initRepo(user, createModel, server)).thenReturn(cloneUrlPath)
+        upon(repoRepoMock.createRepo(createModel, user, repoCreationResult, server.id)).thenReturn(repoId)
+        upon(littleGitCoreWrapper.initRepo(user, createModel, server)).thenReturn(repoCreationResult)
+        upon(repoRepoMock.getRepo(repoId)).thenReturn(repo)
 
         repoService.createRepo(user, createModel)
 
         verify(repoRepoMock, times(repoId)).getRepoSummary(repoId)
-        verify(repoAccessRepoMock, times(repoId)).grantRepoAccess(user, repoId, RepoAccessLevel.Owner)
+        verify(repoAccessRepoMock, times(repoId)).grantRepoAccess(user, repo, RepoAccessLevel.Owner)
     }
 
     @Test
@@ -112,16 +119,19 @@ class RepoServiceTests {
         val createModel = CreateRepoModel(repoName)
         val server = GitServerHelper.gitServer()
         val repoId = 1
-        val cloneUrlPath = "${user.username}/$repoName"
+        val cloneUrlPath = RepoCreationResult("${user.username}/$repoName")
+        val repo = RepoHelper.createTestRepo(user = user)
 
         upon(gitServerRepository.getBestGitServerForUser(user)).thenReturn(server)
         upon(repoRepoMock.getRepoByNameAndCreator(user, repoName)).thenReturn(null)
         upon(repoRepoMock.createRepo(createModel, user, cloneUrlPath, server.id)).thenReturn(repoId)
         upon(littleGitCoreWrapper.initRepo(user, createModel, server)).thenReturn(cloneUrlPath)
+        upon(repoRepoMock.getRepo(repoId)).thenReturn(RepoHelper.createTestRepo(user = user))
+        upon(repoRepoMock.getRepo(repoId)).thenReturn(repo)
 
         repoService.createRepo(user, createModel)
 
         verify(repoRepoMock, times(repoId)).getRepoSummary(repoId)
-        verify(repoAccessRepoMock, times(repoId)).grantRepoAccess(user, repoId, RepoAccessLevel.Owner)
+        verify(repoAccessRepoMock, times(repoId)).grantRepoAccess(user, repo, RepoAccessLevel.Owner)
     }
 }

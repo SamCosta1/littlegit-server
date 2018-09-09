@@ -1,5 +1,6 @@
 package com.littlegit.server.repo.testUtils
 
+import com.littlegit.server.model.repo.Repo
 import com.littlegit.server.model.user.FullUser
 import com.littlegit.server.model.user.UserId
 import java.net.InetAddress
@@ -54,14 +55,19 @@ object CleanupHelper {
     }
 
     fun cleanupRepoAccess(userId: UserId, repoName: String) {
-        val ids = getIds(mapOf("name" to repoName), "Repos", "repoName=:name")
+        val repos = RepositoryHelper.dbConnector.executeSelect("""
+            SELECT * FROM Repos
+            WHERE repoName=:repoName
+        """.trimIndent(), Repo::class.java, params = mapOf("repoName" to repoName))
 
-        ids.forEach {
+        repos?.forEach {
             RepositoryHelper.dbConnector.executeDelete("""
                 DELETE FROM RepoAccess WHERE repoId = :repoId
-            """, mapOf("repoId" to it.toInt()))
+            """, mapOf("repoId" to it.id))
 
-            RepositoryHelper.repoAccessRepository.invalidateCache(userId, it.toInt())
+            RepositoryHelper.repoAccessRepository.invalidateCache(userId, it.id)
+            RepositoryHelper.repoAccessRepository.invalidateCache(userId, it.filePath)
+            RepositoryHelper.repoAccessRepository.invalidateCacheByServerId(userId, it.serverId)
         }
     }
 

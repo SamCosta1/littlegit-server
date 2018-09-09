@@ -22,6 +22,6 @@
       "scripts": {
          "addSshKey": "/home/server/scripts/add-ssh-key.sh"
       }
-
-   }
+   },
+   "apiKeys": ["0987654321"]
 }

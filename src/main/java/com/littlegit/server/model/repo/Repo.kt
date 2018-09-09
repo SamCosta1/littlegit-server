@@ -14,7 +14,8 @@ data class Repo(val id: RepoId,
                 val creatorId: Int,
                 val description:   String,
                 val serverId: Int,
-                val cloneUrlPath: CloneUrlPath) {
+                val cloneUrlPath: CloneUrlPath,
+                val filePath: String) {
 
     fun toRepoSummary(): RepoSummary = RepoSummary(id, repoName, createdDate, description, cloneUrlPath)
 }

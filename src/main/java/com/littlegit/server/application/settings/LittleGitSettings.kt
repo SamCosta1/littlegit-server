@@ -7,7 +7,10 @@ data class LittleGitSettings(val db: DbConfig,
                              val redis: RedisConfig,
                              val tokens: TokensConfig,
                              val isDebug: Boolean = false,
-                             val gitServer: GitServerConfig)
+                             val gitServer: GitServerConfig,
+                             val apiKeys: Set<String> = HashSet()) {
+
+}
 
 data class GitServerConfig(val sshUser: String,
                            private val reposDirectory: String,
