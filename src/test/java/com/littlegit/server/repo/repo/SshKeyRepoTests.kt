@@ -8,7 +8,9 @@ import com.littlegit.server.repo.testUtils.UserHelper
 import com.littlegit.server.repo.testUtils.assertSshKey
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class SshKeyRepoTests {
 
@@ -22,6 +24,55 @@ class SshKeyRepoTests {
     fun testCreateInvalidModel_InvalidKey_ThrowsException() {
         val createModel = CreateSshKeyModel("", 1)
         RepositoryHelper.sshKeyRepository.createSshKey(createModel)
+    }
+
+    @Test
+    fun testSshKeyExists_WhenExists_IsSuccessful() {
+        val signupModel = UserHelper.createSignupModel()
+
+        val publicKey = "Gandalf's favourite public key"
+
+        val cleaner = {
+            CleanupHelper.cleanupSshKey(publicKey)
+            CleanupHelper.cleanupUser(signupModel.email)
+        }
+
+        cleaner()
+
+        try {
+            val userId = RepositoryHelper.userRepository.createUser(signupModel)!!
+            val createModel = CreateSshKeyModel(publicKey, userId)
+
+            val id = RepositoryHelper.sshKeyRepository.createSshKey(createModel)
+            assertNotNull(id); id!!
+
+            assertTrue(RepositoryHelper.sshKeyRepository.sshKeyExists(createModel)!!)
+        } finally {
+            cleaner()
+        }
+    }
+
+    @Test
+    fun testSshKeyDoesNotExist_WhenExists_IsSuccessful() {
+        val signupModel = UserHelper.createSignupModel()
+
+        val publicKey = "Gandalf's favourite public key"
+
+        val cleaner = {
+            CleanupHelper.cleanupSshKey(publicKey)
+            CleanupHelper.cleanupUser(signupModel.email)
+        }
+
+        cleaner()
+
+        try {
+            val userId = RepositoryHelper.userRepository.createUser(signupModel)!!
+            val createModel = CreateSshKeyModel(publicKey, userId)
+
+            assertFalse(RepositoryHelper.sshKeyRepository.sshKeyExists(createModel)!!)
+        } finally {
+            cleaner()
+        }
     }
 
     @Test

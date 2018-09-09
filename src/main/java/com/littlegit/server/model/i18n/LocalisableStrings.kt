@@ -14,8 +14,10 @@ enum class LocalizableString(val key: String) {
     InvalidLanguageCode("invalid_language_code"),
     Response500Body("5xx_error"),
     EmailInUse("email_in_use"),
+    UsernameInUse("username_in_use"),
     RepoNameBlank("repo_name_blank"),
     RepoNameTooLong("repo_name_too_long"),
+    RepoNameInvalid("repo-name-invalid"),
     DescriptionTooLong("description_too_long"),
     InvalidCapacity("invalid_capacity"),
     UsernameBlank("blank_username"),
@@ -23,4 +25,5 @@ enum class LocalizableString(val key: String) {
     ValueAlreadyExists("value_already_exists"),
     InvalidUserId("invalid_user_id"),
     InvalidPublicKey("invalid_public_key")
+
 }

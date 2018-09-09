@@ -22,9 +22,25 @@ class RepoRepoTests {
         RepositoryHelper.repoRepository.createRepo(createRepoModel, user, "cloneurl", 1)
     }
 
+    @Test(expected = InvalidModelException::class)
+    fun testCreateInvalidRepo_InvalidChars_ThrowsException() {
+        val createRepoModel = CreateRepoModel("repo&invalid")
+        val user = UserHelper.createTestUser()
+
+        RepositoryHelper.repoRepository.createRepo(createRepoModel, user, "cloneurl", 1)
+    }
+
+    @Test(expected = InvalidModelException::class)
+    fun testCreateInvalidRepo_NameStartingWithDash_ThrowsException() {
+        val createRepoModel = CreateRepoModel("-repo-invalid")
+        val user = UserHelper.createTestUser()
+
+        RepositoryHelper.repoRepository.createRepo(createRepoModel, user, "cloneurl", 1)
+    }
+
     @Test
     fun testCreateValidRepo_AndGetIt_IsSuccessful() {
-        val repoName = "test_create_valid"
+        val repoName = "test_create-valid"
 
         val cleaner = {
             CleanupHelper.cleanupRepo(repoName)

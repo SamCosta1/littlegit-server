@@ -1,14 +1,11 @@
 package com.littlegit.server.service
 
-import com.littlegit.server.application.exception.EmailInUseException
-import com.littlegit.server.application.exception.NotFoundException
-import com.littlegit.server.application.exception.UserForbiddenException
+import com.littlegit.server.application.exception.*
 import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.model.user.*
 import com.littlegit.server.repo.GitServerRepository
 import com.littlegit.server.repo.SshKeyRepository
 import com.littlegit.server.repo.UserRepository
-import java.security.Principal
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,10 +33,16 @@ class UserService @Inject constructor (private val userRepository: UserRepositor
 
     fun createUser(signupModel: SignupModel) {
 
-        val existingUser = userRepository.getUser(signupModel.email)
+        val existingUserByEmail = userRepository.getUser(signupModel.email)
 
-        if (existingUser != null ) {
+        if (existingUserByEmail != null ) {
             throw EmailInUseException(signupModel.email)
+        }
+
+        val existingUserByUsername = userRepository.getUserByUsername(username = signupModel.username)
+
+        if (existingUserByUsername != null) {
+            throw UsernameInUseException(signupModel.username)
         }
 
         userRepository.createUser(signupModel)
@@ -50,21 +53,25 @@ class UserService @Inject constructor (private val userRepository: UserRepositor
             throw IllegalArgumentException(createSshKeyModel.userId.toString())
         }
 
-        if (currentUser.id == createSshKeyModel.userId || currentUser.hasAnyRoleOf(AuthRole.Admin)) {
-            val id = sshKeyRepository.createSshKey(createSshKeyModel)
-
-            if (id == null || id < 0) {
-                throw UnknownError()
-            }
-
-            // All the servers that contain repos the user has access to
-            val servers = gitServerRepository.getUserServers(createSshKeyModel.userId)
-
-            servers?.forEach { server ->
-                remoteCommandRunner.addSshKey(createSshKeyModel, server)
-            }
-        } else {
+        if (currentUser.id != createSshKeyModel.userId && !currentUser.hasAnyRoleOf(AuthRole.Admin)) {
             throw UserForbiddenException()
+        }
+
+        if (sshKeyRepository.sshKeyExists(createSshKeyModel) == true) {
+            throw DuplicateRecordException(SshKey::class.java)
+        }
+
+        val id = sshKeyRepository.createSshKey(createSshKeyModel)
+
+        if (id == null || id < 0) {
+            throw UnknownError()
+        }
+
+        // All the servers that contain repos the user has access to
+        val servers = gitServerRepository.getUserServers(createSshKeyModel.userId)
+
+        servers?.forEach { server ->
+            remoteCommandRunner.addSshKey(createSshKeyModel, server)
         }
     }
 

@@ -16,6 +16,7 @@ open class UserRepository @Inject constructor (private val dbCon: DatabaseConnec
     companion object {
         const val USER_CACHE_KEY_BY_ID = "User(Id:{0})"
         const val USER_CACHE_BY_EMAIL = "User(Email:{0})"
+        const val USER_CACHE_BY_USERNAME = "User(Username:{0})"
     }
 
     fun getFullUser(id: Int): FullUser? {
@@ -35,6 +36,26 @@ open class UserRepository @Inject constructor (private val dbCon: DatabaseConnec
 
     fun getUser(email: String): User? {
         return getFullUser(email)?.toUser()
+    }
+
+    fun getUserByUsername(username: String): User? = getFullUserByUsername(username)?.toUser()
+
+    fun getFullUserByUsername(username: String): FullUser? {
+        return cache.retrieve(USER_CACHE_BY_USERNAME.inject(username), FullUser::class.java) {
+            val sql = """
+                SELECT * FROM Users
+                WHERE username = :username
+            """
+            val params = mapOf("username" to username)
+
+            val users = dbCon.executeSelect(sql, FullUser::class.java, params = params)
+
+            if (users != null && users.size > 1) {
+                throw IllegalStateException("Multiple users have the same email")
+            }
+
+            users?.firstOrNull()
+        }
     }
 
     fun getFullUser(email: String): FullUser? {
@@ -86,6 +107,17 @@ open class UserRepository @Inject constructor (private val dbCon: DatabaseConnec
         """, model = user)
     }
 
-    fun invalidateCache(userId: UserId) = cache.delete(USER_CACHE_KEY_BY_ID.inject(userId))
-    fun invalidateCache(email: String) = cache.delete(USER_CACHE_BY_EMAIL.inject(email))
+    fun invalidateCache(userId: UserId) = invalidateCache(getUser(userId))
+    fun invalidateCache(email: String) = invalidateCache(getUser(email))
+    fun invalidateCacheByUsername(username: String) = invalidateCache(getUserByUsername(username))
+
+    fun invalidateCache(user: User?) {
+        if (user == null) {
+            return
+        }
+
+        cache.delete(USER_CACHE_KEY_BY_ID.inject(user.id))
+        cache.delete(USER_CACHE_BY_USERNAME.inject(user.username))
+        cache.delete(USER_CACHE_BY_EMAIL.inject(user.email))
+    }
 }

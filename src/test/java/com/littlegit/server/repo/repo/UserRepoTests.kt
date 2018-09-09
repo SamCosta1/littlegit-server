@@ -123,7 +123,7 @@ class UserRepoTests {
         try {
             val id = RepositoryHelper.userRepository.createUser(signupModel)!!
 
-            val cacheKey = MessageFormat.format(UserRepository.USER_CACHE_BY_EMAIL, email)
+            val cacheKey = UserRepository.USER_CACHE_BY_EMAIL.inject(email)
 
             // Shouldn't be anything in cache
             val cached = RepositoryHelper.cache.get(cacheKey)
@@ -131,6 +131,38 @@ class UserRepoTests {
 
             // Get from db
             val user = RepositoryHelper.userRepository.getFullUser(email)
+            assertSignupModel(signupModel, user)
+
+            // Check the get also populated the cache
+            val newCached = RepositoryHelper.cache.get(cacheKey, FullUser::class.java)
+            assertSignupModel(signupModel, newCached)
+        } finally {
+            cleaner()
+        }
+    }
+
+    @Test
+    fun testGetUserByUsername_IsSuccessful() {
+        val username = "username_test_1"
+        val email = "get_user_by_username@gmail.com"
+        val cleaner = {
+            CleanupHelper.cleanupUser(email)
+        }
+
+        cleaner()
+        val signupModel = UserHelper.createSignupModel(username = username, email = email)
+
+        try {
+            val id = RepositoryHelper.userRepository.createUser(signupModel)!!
+
+            val cacheKey = UserRepository.USER_CACHE_BY_USERNAME.inject(username)
+
+            // Shouldn't be anything in cache
+            val cached = RepositoryHelper.cache.get(cacheKey)
+            assertNull(cached)
+
+            // Get from db
+            val user = RepositoryHelper.userRepository.getFullUserByUsername(username)
             assertSignupModel(signupModel, user)
 
             // Check the get also populated the cache
