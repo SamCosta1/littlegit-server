@@ -2,6 +2,7 @@ package com.littlegit.server.authfilter
 
 import com.littlegit.server.application.exception.UserForbiddenException
 import com.littlegit.server.application.exception.UserUnauthorizedException
+import com.littlegit.server.application.settings.SettingsProvider
 import com.littlegit.server.model.user.AuthRole
 import com.littlegit.server.service.AuthService
 import java.io.IOException
@@ -22,7 +23,8 @@ import javax.ws.rs.core.SecurityContext
 @Secured
 @Priority(Priorities.AUTHORIZATION)
 open class AuthFilter @Inject
-constructor(private val authService: AuthService) : ContainerRequestFilter {
+constructor(private val authService: AuthService,
+            private val settingsProvider: SettingsProvider) : ContainerRequestFilter {
 
     @Context
     private lateinit var resourceInfo: ResourceInfo
@@ -44,6 +46,19 @@ constructor(private val authService: AuthService) : ContainerRequestFilter {
 
     @Throws(IOException::class)
     override fun filter(requestContext: ContainerRequestContext) {
+        val apiKey = requestContext.getHeaderString("x-api-key")
+
+        if (!apiKey.isNullOrBlank()) {
+            if (allowedRoles.contains(AuthRole.GitServer)
+                && settingsProvider.settings.apiKeys.contains(apiKey)) {
+
+                // Using api-key auth instead of normal auth
+                return
+            } else {
+                throw UserForbiddenException()
+            }
+        }
+
         val authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION)
 
         if (authHeader?.startsWith(AuthConstants.AuthScheme) == true) {

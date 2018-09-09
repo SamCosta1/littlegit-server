@@ -3,10 +3,12 @@ package com.littlegit.server.service
 import com.littlegit.server.application.exception.DuplicateRecordException
 import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.model.repo.CreateRepoModel
+import com.littlegit.server.model.repo.RepoAccess
 import com.littlegit.server.model.repo.RepoAccessLevel
 import com.littlegit.server.model.repo.RepoSummary
 import com.littlegit.server.model.user.AuthRole
 import com.littlegit.server.model.user.User
+import com.littlegit.server.model.user.UserId
 import com.littlegit.server.repo.GitServerRepository
 import com.littlegit.server.repo.RepoAccessRepository
 import com.littlegit.server.repo.RepoRepository
@@ -59,4 +61,16 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
         repoAccessRepository.grantRepoAccess(user, repo, repoAccessLevel)
         return repoRepository.getRepoSummary(repoId)
     }
+
+    fun getRepoAccessStatus(user: User, repoFilePath: String): RepoAccess? = getRepoAccessStatus(user.id, repoFilePath)
+
+    fun getRepoAccessStatus(userId: UserId, repoFilePath: String): RepoAccess? {
+        return repoAccessRepository.getRepoAccessStatus(userId, repoFilePath)
+    }
+
+    /**
+     * Returns true if the user can access the repo and no otherwise
+     * Optimised this way for use by the git servers
+     */
+    fun getRepoAccessStatusBoolean(user: UserId, repoFilePath: String): Boolean = getRepoAccessStatus(user, repoFilePath)?.active == true
 }

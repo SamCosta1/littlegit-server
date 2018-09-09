@@ -80,16 +80,18 @@ class RepoAccessRepository @Inject constructor (private val dbCon: DatabaseConne
         }
     }
 
-    fun getRepoAccessStatus(user: User, repoPath: String): RepoAccess? {
-        return cache.retrieve(RepoAccessCacheKeys.REPO_ACCESS_BY_PATH_KEY.inject(user.id, repoPath), RepoAccess::class.java) {
+    fun getRepoAccessStatus(user: User, repoPath: String): RepoAccess? = getRepoAccessStatus(user.id, repoPath)
+    fun getRepoAccessStatus(userId: UserId, repoPath: String): RepoAccess? {
+        return cache.retrieve(RepoAccessCacheKeys.REPO_ACCESS_BY_PATH_KEY.inject(userId, repoPath), RepoAccess::class.java) {
             val sql = """
-                SELECT * FROM RepoAccess
+                SELECT RepoAccess.* FROM RepoAccess
+                INNER JOIN Repos ON Repos.id = RepoAccess.repoId
                 WHERE userId = :userId
                 AND   filePath = :filePath
             """
             val params = mapOf(
-                    "filePath" to repoPath,
-                    "userId" to user.id
+                    "userId" to userId,
+                    "filePath" to repoPath
             )
 
             val repoAccesses = dbCon.executeSelect(sql, RepoAccess::class.java, params = params)
