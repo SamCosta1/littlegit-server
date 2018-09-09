@@ -12,6 +12,7 @@ import com.littlegit.server.repo.testUtils.RepositoryHelper
 import com.littlegit.server.repo.testUtils.UserHelper
 import com.littlegit.server.repo.testUtils.assertGitServer
 import com.littlegit.server.util.inject
+import littlegitcore.RepoCreationResult
 import org.junit.Test
 import java.net.InetAddress
 import kotlin.test.assertEquals
@@ -89,8 +90,8 @@ class GitServerRepoTests {
             val server3Id = RepositoryHelper.gitServerRepository.createGitServer(CreateGitServerModel(ip3, GitServerRegion.UK, 10))
 
             // Create two repos, one on server1, one on server2 leaving server 3 without any
-            val repo1Id = RepositoryHelper.repoRepository.createRepo(repo1, user, "clonePath", server1Id)
-            val repo2Id = RepositoryHelper.repoRepository.createRepo(repo2, user, "clonePath", server2Id)
+            val repo1Id = RepositoryHelper.repoRepository.createRepo(repo1, user, RepoCreationResult(), server1Id)
+            val repo2Id = RepositoryHelper.repoRepository.createRepo(repo2, user, RepoCreationResult(), server2Id)
 
             // Grant the user access
             RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo1Id, RepoAccessLevel.Contributor)

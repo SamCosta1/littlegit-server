@@ -4,6 +4,7 @@ import com.littlegit.server.model.repo.CreateRepoModel
 import com.littlegit.server.model.repo.Repo
 import com.littlegit.server.model.repo.RepoId
 import com.littlegit.server.model.user.User
+import littlegitcore.RepoCreationResult
 import java.time.OffsetDateTime
 
 object RepoHelper {
@@ -12,8 +13,9 @@ object RepoHelper {
                        description: String = "Test_Repo_Description",
                        user: User,
                        cloneUrl: String = "clone_url",
+                       filePath: String = "filePath",
                        serverId: Int = 1): Repo {
-        val repoId = RepositoryHelper.repoRepository.createRepo(CreateRepoModel(repoName, description), user, cloneUrl, serverId)
+        val repoId = RepositoryHelper.repoRepository.createRepo(CreateRepoModel(repoName, description), user, RepoCreationResult(cloneUrl, filePath), serverId)
 
         return RepositoryHelper.repoRepository.getRepo(repoId)!!
     }
@@ -23,5 +25,6 @@ object RepoHelper {
                        description: String = "Test_Repo_Description",
                        user: User,
                        cloneUrl: String = "clone_url",
-                       serverId: Int = 1): Repo = Repo(id, name, OffsetDateTime.now(), user.id, description, serverId, cloneUrl)
+                       filePath: String = "/Git/${user.username}/$name",
+                       serverId: Int = 1): Repo = Repo(id, name, OffsetDateTime.now(), user.id, description, serverId, cloneUrl, filePath)
 }

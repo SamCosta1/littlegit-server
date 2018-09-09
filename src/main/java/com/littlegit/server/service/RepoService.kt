@@ -3,7 +3,6 @@ package com.littlegit.server.service
 import com.littlegit.server.application.exception.DuplicateRecordException
 import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.model.repo.CreateRepoModel
-import com.littlegit.server.model.repo.Repo
 import com.littlegit.server.model.repo.RepoAccessLevel
 import com.littlegit.server.model.repo.RepoSummary
 import com.littlegit.server.model.user.AuthRole
@@ -44,10 +43,10 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
         }
 
         // Init the repo on the server
-        val clonePath = littleGitCoreWrapper.initRepo(user, createRepoModel, server)
+        val initResult = littleGitCoreWrapper.initRepo(user, createRepoModel, server)
 
         // Create a record for the repo in the db
-        val repoId = repoRepository.createRepo(createRepoModel, user, clonePath, server.id)
+        val repoId = repoRepository.createRepo(createRepoModel, user, initResult, server.id)
 
         // Give this user access to it
         val repoAccessLevel = when(user.role) {

@@ -8,12 +8,12 @@ import com.littlegit.server.model.user.User
 import com.littlegit.server.util.stripWhiteSpace
 import org.littlegit.core.LittleGitCore
 import org.littlegit.core.commandrunner.GitResult
-import java.nio.file.Path
 import javax.inject.Inject
 
+data class RepoCreationResult(val cloneUrl: String = "", val filePath: String = "")
 class LittleGitCoreWrapper @Inject constructor(private val settingsProvider: SettingsProvider) {
 
-    fun initRepo(user: User, repo: CreateRepoModel, server: GitServer): String {
+    fun initRepo(user: User, repo: CreateRepoModel, server: GitServer): RepoCreationResult {
 
         val littleGit = buildLittleGitCore(server)
         val repoPath = "${user.username.stripWhiteSpace()}/${repo.repoName.stripWhiteSpace()}"
@@ -24,7 +24,9 @@ class LittleGitCoreWrapper @Inject constructor(private val settingsProvider: Set
             throw LittleGitCommandFailedException(result.err)
         }
 
-        return "${settingsProvider.settings.gitServer.gitUser}@${server.ip.hostAddress}:${settingsProvider.settings.gitServer.reposPath.resolve(repoPath).normalize()}"
+        val filePath = settingsProvider.settings.gitServer.reposPath.resolve(repoPath).normalize().toString()
+        val cloneUrl = "${settingsProvider.settings.gitServer.gitUser}@${server.ip.hostAddress}:$filePath"
+        return RepoCreationResult(cloneUrl, filePath)
     }
 
     private fun buildLittleGitCore(server: GitServer): LittleGitCore =

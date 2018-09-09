@@ -9,6 +9,7 @@ import com.littlegit.server.repo.testUtils.CleanupHelper
 import com.littlegit.server.repo.testUtils.RepositoryHelper
 import com.littlegit.server.repo.testUtils.UserHelper
 import com.littlegit.server.util.inject
+import littlegitcore.RepoCreationResult
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -19,7 +20,7 @@ class RepoRepoTests {
     fun testCreateInvalidRepo_ThrowsException() {
         val createRepoModel = CreateRepoModel("Test_InvalidRepo_Name_Which_Is_Much_Too_Long", "")
         val user = UserHelper.createTestUser()
-        RepositoryHelper.repoRepository.createRepo(createRepoModel, user, "cloneurl", 1)
+        RepositoryHelper.repoRepository.createRepo(createRepoModel, user, RepoCreationResult(), 1)
     }
 
     @Test(expected = InvalidModelException::class)
@@ -27,7 +28,7 @@ class RepoRepoTests {
         val createRepoModel = CreateRepoModel("repo&invalid")
         val user = UserHelper.createTestUser()
 
-        RepositoryHelper.repoRepository.createRepo(createRepoModel, user, "cloneurl", 1)
+        RepositoryHelper.repoRepository.createRepo(createRepoModel, user, RepoCreationResult(), 1)
     }
 
     @Test(expected = InvalidModelException::class)
@@ -35,7 +36,7 @@ class RepoRepoTests {
         val createRepoModel = CreateRepoModel("-repo-invalid")
         val user = UserHelper.createTestUser()
 
-        RepositoryHelper.repoRepository.createRepo(createRepoModel, user, "cloneurl", 1)
+        RepositoryHelper.repoRepository.createRepo(createRepoModel, user, RepoCreationResult(), 1)
     }
 
     @Test
@@ -53,7 +54,7 @@ class RepoRepoTests {
         val createRepoModel = CreateRepoModel(repoName, "description")
 
         try {
-            val id = RepositoryHelper.repoRepository.createRepo(createRepoModel, testUser, cloneUrl, serverId)
+            val id = RepositoryHelper.repoRepository.createRepo(createRepoModel, testUser, RepoCreationResult(cloneUrl = cloneUrl), serverId)
 
             assertNotNull(id)
 
@@ -89,7 +90,7 @@ class RepoRepoTests {
         val createRepoModel = CreateRepoModel(repoName, "description")
 
         try {
-            val id = RepositoryHelper.repoRepository.createRepo(createRepoModel, testUser, cloneUrl, serverId)
+            val id = RepositoryHelper.repoRepository.createRepo(createRepoModel, testUser, RepoCreationResult(cloneUrl = cloneUrl), serverId)
             assertNotNull(id)
 
             val retrievedRepo = RepositoryHelper.repoRepository.getRepoByNameAndCreator(testUser, repoName)
