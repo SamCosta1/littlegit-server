@@ -1,9 +1,6 @@
 package com.littlegit.server.service
 
-import com.littlegit.server.application.exception.EmailInUseException
-import com.littlegit.server.application.exception.NotFoundException
-import com.littlegit.server.application.exception.UserForbiddenException
-import com.littlegit.server.application.exception.UsernameInUseException
+import com.littlegit.server.application.exception.*
 import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.model.user.*
 import com.littlegit.server.repo.GitServerRepository
@@ -56,21 +53,25 @@ class UserService @Inject constructor (private val userRepository: UserRepositor
             throw IllegalArgumentException(createSshKeyModel.userId.toString())
         }
 
-        if (currentUser.id == createSshKeyModel.userId || currentUser.hasAnyRoleOf(AuthRole.Admin)) {
-            val id = sshKeyRepository.createSshKey(createSshKeyModel)
-
-            if (id == null || id < 0) {
-                throw UnknownError()
-            }
-
-            // All the servers that contain repos the user has access to
-            val servers = gitServerRepository.getUserServers(createSshKeyModel.userId)
-
-            servers?.forEach { server ->
-                remoteCommandRunner.addSshKey(createSshKeyModel, server)
-            }
-        } else {
+        if (currentUser.id != createSshKeyModel.userId && !currentUser.hasAnyRoleOf(AuthRole.Admin)) {
             throw UserForbiddenException()
+        }
+
+        if (sshKeyRepository.sshKeyExists(createSshKeyModel) == true) {
+            throw DuplicateRecordException(SshKey::class.java)
+        }
+
+        val id = sshKeyRepository.createSshKey(createSshKeyModel)
+
+        if (id == null || id < 0) {
+            throw UnknownError()
+        }
+
+        // All the servers that contain repos the user has access to
+        val servers = gitServerRepository.getUserServers(createSshKeyModel.userId)
+
+        servers?.forEach { server ->
+            remoteCommandRunner.addSshKey(createSshKeyModel, server)
         }
     }
 
