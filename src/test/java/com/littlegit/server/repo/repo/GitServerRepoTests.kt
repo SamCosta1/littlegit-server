@@ -94,8 +94,8 @@ class GitServerRepoTests {
             val repo2Id = RepositoryHelper.repoRepository.createRepo(repo2, user, RepoCreationResult(), server2Id)
 
             // Grant the user access
-            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo1Id, RepoAccessLevel.Contributor)
-            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo2Id, RepoAccessLevel.Contributor)
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, RepositoryHelper.repoRepository.getRepo(repo1Id)!!, RepoAccessLevel.Contributor)
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, RepositoryHelper.repoRepository.getRepo(repo2Id)!!, RepoAccessLevel.Contributor)
 
             val servers = RepositoryHelper.gitServerRepository.getUserServers(userId)
             assertEquals(2, servers?.size)
@@ -106,6 +106,4 @@ class GitServerRepoTests {
             cleaner()
         }
     }
-
-
 }

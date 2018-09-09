@@ -28,7 +28,7 @@ class RepoAccessRepoTests {
             val repo = RepoHelper.insertTestRepo(repoName = repoName, user = user)
             val repoAccessLevel = RepoAccessLevel.Contributor
             val cacheKey = RepoAccessCacheKeys.REPO_ACCESS_CACHE_KEY.inject(user.id, repo.id)
-            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo.id, repoAccessLevel)
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo, repoAccessLevel)
 
             // Check exists in db
             RepositoryHelper.cache.delete(cacheKey)
@@ -61,7 +61,7 @@ class RepoAccessRepoTests {
             val repo = RepoHelper.insertTestRepo(repoName = repoName, user = user)
             val repoAccessLevel = RepoAccessLevel.Contributor
             val cacheKey = RepoAccessCacheKeys.REPO_ACCESS_CACHE_KEY.inject(user.id, repo.id)
-            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo.id, repoAccessLevel)
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo, repoAccessLevel)
 
             // Check exists in db
             RepositoryHelper.cache.delete(cacheKey)
@@ -72,7 +72,7 @@ class RepoAccessRepoTests {
 
             // Now update it
             val updatedRepoAccessLevel = RepoAccessLevel.Owner
-            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo.id, updatedRepoAccessLevel)
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo, updatedRepoAccessLevel)
 
             // Check updated - not clearing the cache to check it was invalidated
             RepositoryHelper.cache.delete(cacheKey)
@@ -106,7 +106,7 @@ class RepoAccessRepoTests {
             val repo = RepoHelper.insertTestRepo(repoName = repoName, user = user)
             val repoAccessLevel = RepoAccessLevel.Contributor
             val cacheKey = RepoAccessCacheKeys.REPO_ACCESS_CACHE_KEY.inject(user.id, repo.id)
-            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo.id, repoAccessLevel)
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo, repoAccessLevel)
 
             // Check exists in db
             RepositoryHelper.cache.delete(cacheKey)
@@ -116,7 +116,7 @@ class RepoAccessRepoTests {
             assertRepo(repo, user, repoAccessLevel, true, createdRepoAccess)
 
             // Now update it
-            RepositoryHelper.repoAccessRepository.revokeRepoAccess(user, repo.id)
+            RepositoryHelper.repoAccessRepository.revokeRepoAccess(user, repo)
 
             // Check updated - not clearing the cache to check it was invalidated
             RepositoryHelper.cache.delete(cacheKey)
@@ -181,7 +181,7 @@ class RepoAccessRepoTests {
             val user = RepositoryHelper.userRepository.getUser(userId)!!
             val repo = RepoHelper.insertTestRepo(repoName = repoName, user = user, serverId = serverId)
 
-            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo.id, RepoAccessLevel.Contributor)
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo, RepoAccessLevel.Contributor)
 
             val userHasRepoOnServer = RepositoryHelper.repoAccessRepository.userHasRepoOnServer(server, user)
             assertNotNull(userHasRepoOnServer); userHasRepoOnServer!!
@@ -212,8 +212,8 @@ class RepoAccessRepoTests {
             val user = RepositoryHelper.userRepository.getUser(userId)!!
             val repo = RepoHelper.insertTestRepo(repoName = repoName, user = user)
 
-            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo.id, RepoAccessLevel.Contributor)
-            RepositoryHelper.repoAccessRepository.revokeRepoAccess(user, repo.id)
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo, RepoAccessLevel.Contributor)
+            RepositoryHelper.repoAccessRepository.revokeRepoAccess(user, repo)
 
             val userHasRepoOnServer = RepositoryHelper.repoAccessRepository.userHasRepoOnServer(server, user)
             assertNotNull(userHasRepoOnServer); userHasRepoOnServer!!

@@ -48,14 +48,15 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
         // Create a record for the repo in the db
         val repoId = repoRepository.createRepo(createRepoModel, user, initResult, server.id)
 
+        val repo = repoRepository.getRepo(repoId) ?: throw UnknownError()
+
         // Give this user access to it
         val repoAccessLevel = when(user.role) {
             AuthRole.BasicUser -> RepoAccessLevel.Contributor
             else -> RepoAccessLevel.Owner
         }
 
-        repoAccessRepository.grantRepoAccess(user, repoId, repoAccessLevel)
-        repoAccessRepository.invalidateCache(user, server)
+        repoAccessRepository.grantRepoAccess(user, repo, repoAccessLevel)
         return repoRepository.getRepoSummary(repoId)
     }
 }
