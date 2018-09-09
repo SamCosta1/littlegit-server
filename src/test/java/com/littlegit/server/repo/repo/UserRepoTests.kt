@@ -123,7 +123,7 @@ class UserRepoTests {
         try {
             val id = RepositoryHelper.userRepository.createUser(signupModel)!!
 
-            val cacheKey = MessageFormat.format(UserRepository.USER_CACHE_BY_EMAIL, email)
+            val cacheKey = UserRepository.USER_CACHE_BY_EMAIL.inject(email)
 
             // Shouldn't be anything in cache
             val cached = RepositoryHelper.cache.get(cacheKey)
@@ -155,7 +155,7 @@ class UserRepoTests {
         try {
             val id = RepositoryHelper.userRepository.createUser(signupModel)!!
 
-            val cacheKey = MessageFormat.format(UserRepository.USER_CACHE_BY_USERNAME, username)
+            val cacheKey = UserRepository.USER_CACHE_BY_USERNAME.inject(username)
 
             // Shouldn't be anything in cache
             val cached = RepositoryHelper.cache.get(cacheKey)

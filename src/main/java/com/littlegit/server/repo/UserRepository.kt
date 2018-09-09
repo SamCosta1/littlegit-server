@@ -107,8 +107,17 @@ open class UserRepository @Inject constructor (private val dbCon: DatabaseConnec
         """, model = user)
     }
 
-    fun invalidateCache(userId: UserId) = cache.delete(USER_CACHE_KEY_BY_ID.inject(userId))
-    fun invalidateCache(email: String) = cache.delete(USER_CACHE_BY_EMAIL.inject(email))
-    fun invalidateCacheByUsername(username: String) = cache.delete(USER_CACHE_BY_USERNAME.inject(username))
+    fun invalidateCache(userId: UserId) = invalidateCache(getUser(userId))
+    fun invalidateCache(email: String) = invalidateCache(getUser(email))
+    fun invalidateCacheByUsername(username: String) = invalidateCache(getUserByUsername(username))
 
+    fun invalidateCache(user: User?) {
+        if (user == null) {
+            return
+        }
+
+        cache.delete(USER_CACHE_KEY_BY_ID.inject(user.id))
+        cache.delete(USER_CACHE_BY_USERNAME.inject(user.username))
+        cache.delete(USER_CACHE_BY_EMAIL.inject(user.email))
+    }
 }

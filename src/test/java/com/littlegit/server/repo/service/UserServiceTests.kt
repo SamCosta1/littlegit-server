@@ -1,8 +1,8 @@
 package com.littlegit.server.repo.service
 
 import com.littlegit.server.application.exception.EmailInUseException
-import com.littlegit.server.application.exception.NotFoundException
 import com.littlegit.server.application.exception.UserForbiddenException
+import com.littlegit.server.application.exception.UsernameInUseException
 import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.model.InvalidModelException
 import com.littlegit.server.model.user.AuthRole
@@ -44,6 +44,17 @@ class UserServiceTests {
         upon(userRepoMock.getUser(testEmail)).thenReturn(UserHelper.createTestUser(email = testEmail))
 
         userService.createUser(UserHelper.createSignupModel(email = testEmail))
+    }
+
+    @Test(expected = UsernameInUseException::class)
+    fun testCreateUser_UsernameInUse_ThrowsException() {
+        val testEmail = "test@example.com"
+        val testUsername = "test-username"
+
+        upon(userRepoMock.getUser(testEmail)).thenReturn(null)
+        upon(userRepoMock.getUserByUsername(testUsername)).thenReturn(UserHelper.createTestUser(email = testEmail, username = testUsername))
+
+        userService.createUser(UserHelper.createSignupModel(email = testEmail, username = testUsername))
     }
 
     @Test

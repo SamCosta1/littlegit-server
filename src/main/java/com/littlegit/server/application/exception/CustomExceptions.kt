@@ -8,7 +8,7 @@ import java.lang.RuntimeException
 import kotlin.reflect.KClass
 
 data class EmailInUseException(val email: String) : ValueInUseException(LocalizableString.EmailInUse, email)
-data class UsernameInUserException(val username: String) : ValueInUseException(LocalizableString.UsernameInUse, username)
+data class UsernameInUseException(val username: String) : ValueInUseException(LocalizableString.UsernameInUse, username)
 open class ValueInUseException( val localizableString: LocalizableString, val value: String ): Throwable()
 
 data class NoSuchEnumValueException(val code: Any) : Exception()

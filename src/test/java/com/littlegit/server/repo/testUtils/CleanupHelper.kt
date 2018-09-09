@@ -1,5 +1,6 @@
 package com.littlegit.server.repo.testUtils
 
+import com.littlegit.server.model.user.FullUser
 import com.littlegit.server.model.user.UserId
 import java.net.InetAddress
 
@@ -7,17 +8,20 @@ object CleanupHelper {
 
     fun cleanupUser(email: String) {
 
-        val ids = getIds(mapOf("email" to email), "Users", "email=:email")
+        val users = RepositoryHelper.dbConnector.executeSelect("""
+            SELECT * FROM Users
+            WHERE email=:email
+        """.trimIndent(), FullUser::class.java, params = mapOf("email" to email))
 
+        users?.forEach {
+            cleanupAuthTokensForUserId(it.id)
+            RepositoryHelper.userRepository.invalidateCache(it)
+        }
+
+        RepositoryHelper.userRepository.invalidateCache(email)
         RepositoryHelper.dbConnector.executeDelete("""
             DELETE FROM Users WHERE email=:email
         """, mapOf("email" to email))
-
-        ids.forEach {
-            cleanupAuthTokensForUserId(it.toInt())
-            RepositoryHelper.userRepository.invalidateCache(it.toInt())
-        }
-        RepositoryHelper.userRepository.invalidateCache(email)
     }
 
     fun cleanupAuthTokensForUserId(userId: UserId) {

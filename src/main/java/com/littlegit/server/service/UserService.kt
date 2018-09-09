@@ -3,13 +3,12 @@ package com.littlegit.server.service
 import com.littlegit.server.application.exception.EmailInUseException
 import com.littlegit.server.application.exception.NotFoundException
 import com.littlegit.server.application.exception.UserForbiddenException
-import com.littlegit.server.application.exception.UsernameInUserException
+import com.littlegit.server.application.exception.UsernameInUseException
 import com.littlegit.server.application.remoterunner.RemoteCommandRunner
 import com.littlegit.server.model.user.*
 import com.littlegit.server.repo.GitServerRepository
 import com.littlegit.server.repo.SshKeyRepository
 import com.littlegit.server.repo.UserRepository
-import java.security.Principal
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,7 +45,7 @@ class UserService @Inject constructor (private val userRepository: UserRepositor
         val existingUserByUsername = userRepository.getUserByUsername(username = signupModel.username)
 
         if (existingUserByUsername != null) {
-            throw UsernameInUserException(signupModel.username)
+            throw UsernameInUseException(signupModel.username)
         }
 
         userRepository.createUser(signupModel)
