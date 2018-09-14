@@ -15,6 +15,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+import java.util.List;
 
 @Path("/repo")
 @Produces(MediaType.APPLICATION_JSON)
@@ -43,6 +44,13 @@ public class RepoController {
     @Secured({ AuthRole.GitServer })
     public Boolean getRepoAccessStatusBoolean(@QueryParam("userId") int userId, @QueryParam("repoPath") String path) {
         return repoService.getRepoAccessStatusBoolean(userId, path);
+    }
+
+    @GET
+    @Path("/repos")
+    @Secured({ AuthRole.Admin, AuthRole.OrganizationAdmin, AuthRole.BasicUser})
+    public List<RepoSummary> getReposForUser(@Context SecurityContext context) {
+        return repoService.getReposForUser(CastingUtilsKt.asUser(context.getUserPrincipal()));
     }
 
 }

@@ -87,6 +87,7 @@ class RepoServiceTests {
         repoService.createRepo(user, createModel)
 
         verify(repoRepoMock, times(1)).getRepoSummary(repoId)
+        verify(repoRepoMock, times(1)).invalidateCache(user)
         verify(repoAccessRepoMock, times(1)).grantRepoAccess(user, repo, RepoAccessLevel.Contributor)
     }
 
@@ -109,6 +110,7 @@ class RepoServiceTests {
         repoService.createRepo(user, createModel)
 
         verify(repoRepoMock, times(repoId)).getRepoSummary(repoId)
+        verify(repoRepoMock, times(1)).invalidateCache(user)
         verify(repoAccessRepoMock, times(repoId)).grantRepoAccess(user, repo, RepoAccessLevel.Owner)
     }
 
@@ -132,6 +134,7 @@ class RepoServiceTests {
         repoService.createRepo(user, createModel)
 
         verify(repoRepoMock, times(repoId)).getRepoSummary(repoId)
+        verify(repoRepoMock, times(1)).invalidateCache(user)
         verify(repoAccessRepoMock, times(repoId)).grantRepoAccess(user, repo, RepoAccessLevel.Owner)
     }
 }

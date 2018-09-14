@@ -59,7 +59,15 @@ class RepoService @Inject constructor (private val repoRepository: RepoRepositor
         }
 
         repoAccessRepository.grantRepoAccess(user, repo, repoAccessLevel)
+        repoRepository.invalidateCache(user) // Important, otherwise repo won't exist in user's list of repos
         return repoRepository.getRepoSummary(repoId)
+    }
+
+    /**
+     * Returns all the repos the user currently has access to
+     */
+    fun getReposForUser(user: User): List<RepoSummary>? {
+        return repoRepository.getAllReposForUser(user)
     }
 
     fun getRepoAccessStatus(user: User, repoFilePath: String): RepoAccess? = getRepoAccessStatus(user.id, repoFilePath)
