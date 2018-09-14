@@ -3,6 +3,7 @@ package com.littlegit.server.repo.repo
 import com.littlegit.server.model.repo.CreateRepoModel
 import com.littlegit.server.model.InvalidModelException
 import com.littlegit.server.model.repo.Repo
+import com.littlegit.server.model.repo.RepoAccessLevel
 import com.littlegit.server.model.user.User
 import com.littlegit.server.repo.RepoCacheKeys
 import com.littlegit.server.repo.testUtils.CleanupHelper
@@ -12,7 +13,9 @@ import com.littlegit.server.util.inject
 import littlegitcore.RepoCreationResult
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class RepoRepoTests {
 
@@ -58,7 +61,7 @@ class RepoRepoTests {
 
             assertNotNull(id)
 
-            val cacheKey = RepoCacheKeys.REPO_CACHE_KEY_BY_ID.inject(id)
+            val cacheKey = RepoCacheKeys.REPO_BY_ID.inject(id)
 
             // Check exists in db
             RepositoryHelper.cache.delete(cacheKey)
@@ -98,6 +101,71 @@ class RepoRepoTests {
             // Check all the values are as expected
             assertRepo(createRepoModel, testUser, cloneUrl, serverId, retrievedRepo)
 
+        } finally {
+            cleaner()
+        }
+    }
+
+    @Test
+    fun testGetReposForUser_WithNoRepos_IsSuccessful() {
+        val testUser = UserHelper.createTestUser()
+
+        val cleaner = {
+            CleanupHelper.cleanupUser(testUser.email)
+        }
+
+        try {
+            val repos = RepositoryHelper.repoRepository.getAllReposForUser(testUser)
+            assertNotNull(repos); repos!!
+
+            assertEquals(0, repos.size)
+        } finally {
+            cleaner()
+        }
+    }
+
+    @Test
+    fun testGetReposForUser_WithRevokedRepoAccesses_IsSuccessful() {
+        val userEmail = "merry@pippin.com"
+        val repoName1 = "merry"
+        val repoName2 = "pippin"
+        val repoName3 = "tree-beard"
+
+        val cleaner = {
+            CleanupHelper.cleanupUser(userEmail)
+            CleanupHelper.cleanupRepos(repoName1, repoName2, repoName3)
+            CleanupHelper.cleanupRepoAccess(userEmail, repoName1, repoName2, repoName3)
+        }
+
+        cleaner()
+
+        try {
+            val userId = RepositoryHelper.userRepository.createUser(UserHelper.createSignupModel(email = userEmail))!!
+            val user = RepositoryHelper.userRepository.getUser(userId)!!
+
+            val repoId1 = RepositoryHelper.repoRepository.createRepo(CreateRepoModel(repoName1), user, RepoCreationResult(), 1)
+            val repoId2 = RepositoryHelper.repoRepository.createRepo(CreateRepoModel(repoName2), user, RepoCreationResult(), 1)
+            val repoId3 = RepositoryHelper.repoRepository.createRepo(CreateRepoModel(repoName3), user, RepoCreationResult(), 1)
+
+            val repo1 = RepositoryHelper.repoRepository.getRepo(repoId1)!!
+            val repo2 = RepositoryHelper.repoRepository.getRepo(repoId2)!!
+            val repo3 = RepositoryHelper.repoRepository.getRepo(repoId3)!!
+
+            // Grant user access to all of them
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo1, RepoAccessLevel.Owner)
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo2, RepoAccessLevel.Owner)
+            RepositoryHelper.repoAccessRepository.grantRepoAccess(user, repo3, RepoAccessLevel.Owner)
+
+            // Revoke the user's access to repo3 - It shouldn't appear in the list
+            RepositoryHelper.repoAccessRepository.revokeRepoAccess(user, repo3)
+
+            val repos = RepositoryHelper.repoRepository.getAllReposForUser(user)
+            assertNotNull(repos); repos!!
+
+            assertEquals(2, repos.size)
+            assertTrue(repos.contains(repo1.toRepoSummary()))
+            assertTrue(repos.contains(repo2.toRepoSummary()))
+            assertFalse(repos.contains(repo3.toRepoSummary()))
         } finally {
             cleaner()
         }

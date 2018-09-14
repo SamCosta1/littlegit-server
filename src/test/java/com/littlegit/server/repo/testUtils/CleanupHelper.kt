@@ -71,6 +71,8 @@ object CleanupHelper {
         }
     }
 
+    fun cleanupRepoAccess(email: String, vararg repos: String) = repos.forEach { cleanupRepoAccess(email, it) }
+
     fun cleanupRepoAccess(email: String, repoName: String) {
         val ids = getIds(mapOf("name" to repoName), "Repos", "repoName=:name")
         val user = RepositoryHelper.userRepository.getUser(email)
