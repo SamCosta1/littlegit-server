@@ -10,7 +10,7 @@ object ValidationUtils {
                 && email.length < 50
     }
 
-    fun validatePassword(passowrd: String): Boolean {
-        return passowrd.isNotBlank()
+    fun validatePassword(password: String): Boolean {
+        return password.isNotBlank()
     }
 }

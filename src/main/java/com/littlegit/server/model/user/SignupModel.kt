@@ -18,7 +18,6 @@ class SignupModel(val email: String,
         if (!ValidationUtils.validateEmail(email))       { invalidMessages.add(LocalizableString.InvalidEmail)    }
         if (!ValidationUtils.validatePassword(password)) { invalidMessages.add(LocalizableString.InvalidPassword) }
         if (firstName.isBlank())    { invalidMessages.add(LocalizableString.FirstNameBlank) }
-        if (surname.isBlank())      { invalidMessages.add(LocalizableString.SurnameBlank)    }
         if (languageCode.isBlank()) { invalidMessages.add(LocalizableString.LanguageCodeBlank)    }
         if (username.isBlank())     { invalidMessages.add(LocalizableString.UsernameBlank)    }
 
@@ -29,5 +28,4 @@ class SignupModel(val email: String,
 
         return ValidatableResult(invalidMessages)
     }
-
 }
