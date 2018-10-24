@@ -1,0 +1,2 @@
+ALTER TABLE Repos
+MODIFY repoName VARCHAR(20);
