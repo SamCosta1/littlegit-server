@@ -21,7 +21,7 @@ class RepoRepoTests {
 
     @Test(expected = InvalidModelException::class)
     fun testCreateInvalidRepo_ThrowsException() {
-        val createRepoModel = CreateRepoModel("Test_InvalidRepo_Name_Which_Is_Much_Too_Long", "")
+        val createRepoModel = CreateRepoModel("Test_InvalidRepo_Name_Which_Is_Much_Too_Long_Test_InvalidRepo_Name_Which_Is_Much_Too_Long_Test_InvalidRepo_Name_Which_Is_Much_Too_Long", "")
         val user = UserHelper.createTestUser()
         RepositoryHelper.repoRepository.createRepo(createRepoModel, user, RepoCreationResult(), 1)
     }
@@ -44,7 +44,7 @@ class RepoRepoTests {
 
     @Test
     fun testCreateValidRepo_AndGetIt_IsSuccessful() {
-        val repoName = "test_create-valid"
+        val repoName = "test_create-valid-of-sensible-length-if-you-understand"
 
         val cleaner = {
             CleanupHelper.cleanupRepo(repoName)

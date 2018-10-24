@@ -29,7 +29,7 @@ data class CreateRepoModel(val repoName: String, val description: String = ""): 
         val invalidMessages = mutableListOf<LocalizableString>()
 
         if (repoName.isBlank()) invalidMessages.add(LocalizableString.RepoNameBlank)
-        if (repoName.length >= 20) invalidMessages.add(LocalizableString.RepoNameTooLong)
+        if (repoName.length >= 100) invalidMessages.add(LocalizableString.RepoNameTooLong)
         if (!repoName.matches(Pattern.compile("\\w+[\\w-]+").toRegex())) invalidMessages.add(LocalizableString.RepoNameInvalid)
         if (description.length >= 200) invalidMessages.add(LocalizableString.DescriptionTooLong)
 
