@@ -24,6 +24,9 @@ enum class LocalizableString(val key: String) {
     InvalidUsername("invalid_username"),
     ValueAlreadyExists("value_already_exists"),
     InvalidUserId("invalid_user_id"),
-    InvalidPublicKey("invalid_public_key")
+    CloneUrlTooLongKey("clone_url_too_long"),
+    FilePathTooLongKey("file_path"),
+    InvalidPublicKey("invalid_public_key"),
+
 
 }

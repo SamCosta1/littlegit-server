@@ -1,0 +1,3 @@
+ALTER TABLE Repos
+MODIFY filePath VARCHAR(200),
+MODIFY cloneUrlPath VARCHAR(200);
