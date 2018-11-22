@@ -27,9 +27,18 @@ class RepoRepository @Inject constructor (private val dbCon: DatabaseConnector,
 
     fun createRepo(createModel: CreateRepoModel, user: User, initResponse: RepoCreationResult, serverId: Int): RepoId {
 
-        val validationResult = createModel.validate()
-        if (validationResult.isNotValid) {
-            throw InvalidModelException(validationResult)
+        val createValidationResult = createModel.validate()
+        if (createValidationResult.isNotValid) {
+            throw InvalidModelException(createValidationResult)
+        }
+
+        val initResponseValidationResult = initResponse.validate()
+        if (initResponseValidationResult.isNotValid) {
+            throw InvalidModelException(initResponseValidationResult)
+        }
+
+        if (initResponseValidationResult.isNotValid) {
+            throw InvalidModelException(createValidationResult)
         }
 
         return dbCon.executeInsert("""

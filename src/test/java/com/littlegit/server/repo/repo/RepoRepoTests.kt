@@ -35,6 +35,22 @@ class RepoRepoTests {
     }
 
     @Test(expected = InvalidModelException::class)
+    fun testCreateInvalidRepo_CloneUrlTooLong_ThrowsException() {
+        val createRepoModel = CreateRepoModel("repo_valid")
+        val user = UserHelper.createTestUser()
+
+        RepositoryHelper.repoRepository.createRepo(createRepoModel, user, RepoCreationResult(cloneUrl = "a".repeat(200)), 1)
+    }
+
+    @Test(expected = InvalidModelException::class)
+    fun testCreateInvalidRepo_FilePathTooLong_ThrowsException() {
+        val createRepoModel = CreateRepoModel("repo_valid")
+        val user = UserHelper.createTestUser()
+
+        RepositoryHelper.repoRepository.createRepo(createRepoModel, user, RepoCreationResult(filePath = "a".repeat(200)), 1)
+    }
+
+    @Test(expected = InvalidModelException::class)
     fun testCreateInvalidRepo_NameStartingWithDash_ThrowsException() {
         val createRepoModel = CreateRepoModel("-repo-invalid")
         val user = UserHelper.createTestUser()
